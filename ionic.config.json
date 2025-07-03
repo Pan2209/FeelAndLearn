@@ -1,0 +1,7 @@
+{
+  "name": "FeelAndLearn",
+  "integrations": {
+    "capacitor": {}
+  },
+  "type": "angular-standalone"
+}

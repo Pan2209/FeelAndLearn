@@ -1,0 +1,180 @@
+// Ionic Variables and Theming
+// ----------------------------------------------------------------------------
+
+:root {
+  /** primary */
+  --ion-color-primary: #8E97FD; // Color principal de los botones (azul violeta)
+  --ion-color-primary-rgb: 142, 151, 253;
+  --ion-color-primary-contrast: #ffffff; // Texto en botones primarios (blanco)
+  --ion-color-primary-contrast-rgb: 255, 255, 255;
+  --ion-color-primary-shade: #7d85e0;
+  --ion-color-primary-tint: #99a2ff;
+
+  /** secondary - Usaremos para los bordes de inputs */
+  --ion-color-secondary: #A1A4B2; // Color de los bordes de input (gris)
+  --ion-color-secondary-rgb: 161, 164, 178;
+  --ion-color-secondary-contrast: #000000;
+  --ion-color-secondary-contrast-rgb: 0, 0, 0;
+  --ion-color-secondary-shade: #8e909d;
+  --ion-color-secondary-tint: #acafbc;
+
+  /** tertiary */
+  --ion-color-tertiary: #A1A4B2;
+  --ion-color-tertiary-rgb: 161, 164, 178;
+  --ion-color-tertiary-contrast: #ffffff;
+  --ion-color-tertiary-contrast-rgb: 255, 255, 255;
+  --ion-color-tertiary-shade: #8e909d;
+  --ion-color-tertiary-tint: #acafbc;
+
+  /** success */
+  --ion-color-success: #2dd36f;
+  --ion-color-success-rgb: 45, 211, 111;
+  --ion-color-success-contrast: #ffffff;
+  --ion-color-success-contrast-rgb: 255, 255, 255;
+  --ion-color-success-shade: #28ba62;
+  --ion-color-success-tint: #42d778;
+
+  /** warning */
+  --ion-color-warning: #ffc409;
+  --ion-color-warning-rgb: 255, 196, 9;
+  --ion-color-warning-contrast: #000000;
+  --ion-color-warning-contrast-rgb: 0, 0, 0;
+  --ion-color-warning-shade: #e0ac08;
+  --ion-color-warning-tint: #ffca22;
+
+  /** danger */
+  --ion-color-danger: #eb445a;
+  --ion-color-danger-rgb: 235, 68, 90;
+  --ion-color-danger-contrast: #ffffff;
+  --ion-color-danger-contrast-rgb: 255, 255, 255;
+  --ion-color-danger-shade: #cf3c4f;
+  --ion-color-danger-tint: #ed576b;
+
+  /** dark */
+  --ion-color-dark: #222428;
+  --ion-color-dark-rgb: 34, 36, 40;
+  --ion-color-dark-contrast: #ffffff;
+  --ion-color-dark-contrast-rgb: 255, 255, 255;
+  --ion-color-dark-shade: #1e2023;
+  --ion-color-dark-tint: #383a3e;
+
+  /** medium */
+  --ion-color-medium: #92949c;
+  --ion-color-medium-rgb: 146, 148, 156;
+  --ion-color-medium-contrast: #ffffff;
+  --ion-color-medium-contrast-rgb: 255, 255, 255;
+  --ion-color-medium-shade: #808289;
+  --ion-color-medium-tint: #9d9fa6;
+
+  /** light */
+  --ion-color-light: #f4f5f8;
+  --ion-color-light-rgb: 244, 245, 248;
+  --ion-color-light-contrast: #000000;
+  --ion-color-light-contrast-rgb: 0, 0, 0;
+  --ion-color-light-shade: #d7d8da;
+  --ion-color-light-tint: #f5f6f9;
+
+  // Colores específicos de tu diseño
+  --app-color-white: #FFFFFF; // Color principal del fondo de la app (FF FFFF)
+  --app-color-black: #000000; // Fondo del navegador (AHORA SERÁ EL FONDO DEL BODY SI APLICA)
+  --app-color-input-background: #F0F0F0; // Fondo de los recuadros de input
+  --app-color-input-border: #A1A4B2; // Color de los bordes de input
+  --app-color-main-button: #8E97FD; // Color de botones principales
+  --app-color-text-input-label: #A1A4B2; // Color del texto "Correo Electrónico", "Contraseña", "Usuario" (gris oscuro)
+  --app-color-text-input-value: #000000; // Color del texto que el usuario escribe en el input (negro)
+  --app-color-text-dark: #000000; // Texto general oscuro
+  --app-color-text-light: #FFFFFF; // Texto general claro (para botones principales)
+}
+
+/* Base global styles (ajustado para que la app ocupe toda la pantalla) */
+body {
+  // El fondo del body será el fondo de toda la aplicación ahora.
+  --ion-background-color: var(--app-color-white); // Ahora el fondo de la app es blanco
+  --ion-background-color-rgb: 255,255,255;
+  color: var(--app-color-text-dark); // Color de texto por defecto en body será oscuro
+}
+
+/* Las siguientes reglas de ion-app y ion-router-outlet SE ELIMINAN para no simular un móvil */
+/* Se asume que Ionic se encargará de que la app ocupe el 100% del viewport en el dispositivo */
+
+/* Asegura que el contenido de la app (dentro del emulador) sea blanco */
+ion-content {
+  --background: var(--app-color-white); // Fondo blanco para el contenido de las páginas
+  color: var(--app-color-text-dark); // Texto general en el contenido blanco será oscuro
+}
+
+/* Headers y footers para que sean blancos */
+ion-header, ion-footer {
+  --background: var(--app-color-white);
+  --color: var(--app-color-text-dark); // Texto negro en headers
+}
+
+ion-toolbar {
+  --background: var(--app-color-white);
+  --color: var(--app-color-text-dark);
+  ion-title {
+    color: var(--app-color-text-dark); // Título de la barra de herramientas negro
+  }
+}
+
+// Estilos para los inputs, aplicando los colores del Figma
+ion-item.custom-input-item {
+  --background: var(--app-color-input-background); // Fondo del recuadro del input (#F0F0F0)
+  border-radius: 10px; // Bordes redondeados
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --inner-padding-end: 0;
+  border: 1px solid var(--app-color-input-border); // Borde con el color A1A4B2
+  --inner-border-width: 0; // Deshabilita la línea inferior predeterminada de Ionic
+  height: 50px; // Altura fija para todos los inputs
+}
+
+ion-item.custom-input-item ion-label {
+  font-size: 14px;
+  color: var(--app-color-text-input-label) !important;
+  transform: translateY(0);
+  padding-top: 0;
+  padding-bottom: 0;
+}
+
+ion-item.custom-input-item.ion-dirty ion-label,
+ion-item.custom-input-item.ion-focused ion-label {
+  color: var(--app-color-text-dark) !important; /* CAMBIO CLAVE: Negro y !important */
+}
+
+
+ion-item.custom-input-item ion-input {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  font-size: 16px;
+  color: var(--app-color-text-input-value); // Color del texto que el usuario escribe (#000000)
+}
+
+// Estilo para los botones principales
+ion-button.main-button {
+  --background: var(--app-color-main-button); // Fondo del botón principal (8E97FD)
+  --color: var(--app-color-text-light); // Texto blanco en los botones principales
+  --border-radius: 10px;
+  height: 50px;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase; // Si quieres mayúsculas como en Figma
+}
+
+// Otros estilos que podrían necesitar ajustes
+ion-text {
+  color: var(--app-color-text-dark); // Asegura que los ion-text sean oscuros por defecto
+}
+
+h1, h2, h3, h4, h5, h6 {
+  color: var(--app-color-text-dark); // Títulos oscuros
+}
+
+a {
+  color: var(--ion-color-primary); // Enlaces usan el color primario (azul violeta)
+}
+
+// Asegurar que el mensaje de error tenga contraste
+ion-text[color="primary"] {
+  color: var(--ion-color-primary) !important; // Los mensajes de éxito/error usan el primary
+}

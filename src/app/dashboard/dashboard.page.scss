@@ -1,0 +1,122 @@
+ion-content {
+  // El fondo base de la app, que es blanco por defecto de variables.scss
+}
+
+ion-toolbar {
+  --background: #E9B7B7; // ¡Cambiado al color #E9B7B7!
+  --color: var(--app-color-text-dark); // El color del texto seguirá siendo oscuro
+  ion-title {
+    color: var(--app-color-text-dark); // El color del título seguirá siendo oscuro
+  }
+  // Asegúrate de que los íconos de los botones también se vean bien con este fondo
+  ion-buttons {
+    ion-back-button, ion-button {
+      --color: var(--app-color-text-dark); // Asegura que los íconos sean oscuros
+    }
+  }
+}
+
+
+.main-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 30px; // Espacio superior para el contenido
+  padding-bottom: 20px;
+  background-image: url('../../assets/main-bg-wave.png'); // Si tienes una imagen de fondo de onda
+  background-size: cover; // Ajusta la imagen al tamaño del contenedor
+  background-position: top center; // Posiciona la imagen
+  background-repeat: no-repeat; // Evita que se repita
+}
+
+.welcome-section {
+  text-align: center;
+  margin-bottom: 40px; // Espacio antes de la cuadrícula de opciones
+  h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--app-color-text-dark); // Este ya está oscuro
+    margin: 0;
+    line-height: 1.2;
+  }
+  h2 {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--app-color-text-dark); // ¡Cambiado a color oscuro!
+    margin: 0;
+    line-height: 1.2;
+  }
+}
+
+.options-grid {
+  width: 100%;
+  max-width: 400px; // Limita el ancho de la cuadrícula para pantallas grandes
+  margin: 0 auto; // Centra la cuadrícula
+}
+
+.option-card {
+  height: 180px; // Altura fija de las tarjetas
+  border-radius: 15px; // Bordes redondeados
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  text-align: center;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); // Sombra sutil
+  margin: 8px; // Espacio entre tarjetas
+  cursor: pointer; // Indica que es clickeable
+
+  // Estilos específicos para cada tipo de tarjeta basado en Figma
+  &.learn-abc {
+    --background: #a9aaff; // Color de fondo del card "Aprender Abecedario" (azul claro)
+  }
+  &.practice-letters {
+    --background: #c3f1d4; // Color de fondo del card "Practicar Letras" (verde claro)
+  }
+  &.view-progress {
+    --background: #ffb8b8; // Color de fondo del card "Ver Progreso" (rojo claro)
+  }
+  &.settings-contact {
+    --background: #ffd99d; // Color de fondo del card "Ajustes y Contacto" (naranja claro)
+  }
+
+  .card-content-center {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+    width: 100%;
+    height: 100%;
+    padding: 10px; // Ajusta el padding interno
+  }
+
+  .card-icon {
+    width: 60px; // Tamaño del icono
+    height: 60px;
+    margin-bottom: 10px;
+    object-fit: contain;
+  }
+
+  h3 {
+    font-size: 16px;
+    font-weight: bold;
+    color: var(--app-color-text-dark); // Texto de las tarjetas oscuro
+    line-height: 1.3;
+    margin: 0;
+  }
+}
+
+// Estilo del botón de logout en el header
+ion-button[slot="end"] {
+  --padding-end: 5px;
+  --padding-start: 5px;
+  ion-icon {
+    font-size: 24px;
+  }
+}
+
+// Para pantallas más grandes, ajustar el padding del content-wrapper si es necesario
+@media (min-width: 768px) {
+  .main-content-wrapper {
+    padding-top: 50px;
+  }
+}

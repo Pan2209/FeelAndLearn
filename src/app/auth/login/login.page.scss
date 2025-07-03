@@ -1,0 +1,93 @@
+/* Estilos de la página de login */
+ion-content {
+  /* El fondo de ion-content ya está blanco por defecto en variables.scss */
+}
+
+ion-toolbar {
+  /* Ya está blanco por defecto en variables.scss */
+}
+
+.content-wrapper {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%; /* Ocupa toda la altura disponible del ion-content */
+  padding: 20px;
+  text-align: center;
+}
+
+.image-container {
+  width: 100%;
+  max-width: 200px;
+  margin-bottom: 30px; /* Aumentado para más espacio */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+
+.welcome-image {
+  width: 100%;
+  height: auto;
+  object-fit: contain;
+}
+
+h2 {
+  font-size: 24px;
+  font-weight: bold;
+  color: var(--app-color-text-dark);
+  margin-top: 0;
+  margin-bottom: 30px;
+}
+
+.form-container {
+  width: 100%;
+  max-width: 350px;
+  margin-top: 0px; /* Ajustado para que el espaciado sea controlado por el .image-container y sus propios items */
+}
+
+/* Estilos de los inputs personalizados (ion-item.custom-input-item)
+   Estos estilos son ahora principalmente controlados en variables.scss para consistencia.
+   Aquí se mantienen si necesitas alguna sobrescritura específica de esta página,
+   pero si no, podrían simplificarse.
+*/
+ion-item.custom-input-item {
+  position: relative; /* Importante para posicionar el label absolutamente */
+  /* Propiedades de padding, border, background, height ya definidas en variables.scss */
+  margin-bottom: 20px; /* Espacio entre inputs */
+  --highlight-background: none; /* Sin resaltado de fondo en focus para Android */
+  --detail-icon-display: none; /* Ocultar icono de detalle */
+}
+
+/* Los estilos de ion-label y ion-input dentro de ion-item.custom-input-item
+   han sido movidos y centralizados en variables.scss para una mejor gestión.
+   Si tienes alguna necesidad específica de login.page.scss que no se resuelva
+   globalmente, puedes añadirla aquí con cuidado.
+*/
+
+.forgot-password, .no-account {
+  font-size: 14px;
+  color: var(--app-color-text-dark);
+  a {
+    color: var(--ion-color-primary);
+    text-decoration: none;
+    font-weight: bold;
+  }
+}
+
+.forgot-password {
+  margin-top: 20px; /* Espacio para separar del botón de ACCEDER */
+  margin-bottom: 10px; /* Espacio antes del "NO TIENES CUENTA?" */
+}
+
+.no-account {
+  text-align: center;
+  margin-top: 0px; /* Espacio controlado por el párrafo anterior */
+  font-size: 14px;
+  color: var(--app-color-text-dark); /* Color de texto oscuro */
+}
+
+.action-button {
+  width: 100%;
+  margin-top: 30px; /* Espacio antes del botón */
+}

@@ -1,0 +1,87 @@
+/* Estilos para el componente PrivacyPolicyModalPage */
+:host {
+  display: flex;
+  flex-direction: column;
+  height: 100%; /* Asegura que el componente modal ocupe toda la altura disponible */
+  width: 100%; /* Asegura que ocupe todo el ancho */
+}
+
+ion-header {
+  --background: var(--ion-color-primary); /* Fondo del header del modal */
+  --color: var(--app-color-text-light); /* Color por defecto de los elementos internos */
+}
+
+ion-title {
+  color: var(--app-color-text-light) !important; /* FORZAR Título blanco si el fondo del toolbar es primario oscuro */
+}
+
+ion-buttons ion-button {
+  --color: var(--app-color-text-light) !important; /* FORZAR Color de los botones de cerrar (blanco) */
+}
+
+.privacy-policy-content {
+  --background: var(--app-color-white);
+  color: var(--app-color-text-dark) !important; /* FORZAR Texto del contenido negro */
+  font-size: 14px;
+  overflow-y: auto; /* Habilita el scroll vertical si el contenido excede */
+  padding: 20px; 
+  box-sizing: border-box; 
+  flex: 1; /* ¡CLAVE! Permite que el ion-content crezca y ocupe el espacio flexible */
+  min-height: 0; /* Asegura que no tenga una altura mínima que impida el scroll */
+  
+  // Opcional: Forzar scrollbar visible para depuración (quitar en producción)
+  // scrollbar-width: auto; 
+  // &::-webkit-scrollbar {
+  //   display: block;
+  // }
+
+
+  h3 {
+    font-size: 18px;
+    font-weight: bold;
+    margin-top: 20px;
+    margin-bottom: 10px;
+    color: var(--app-color-text-dark) !important; /* Títulos h3 negros */
+  }
+
+  p {
+    margin-bottom: 10px;
+    line-height: 1.5;
+    color: var(--app-color-text-dark) !important; /* Párrafos negros */
+  }
+
+  ul {
+    margin-left: 20px;
+    margin-bottom: 10px;
+    list-style-type: disc; // Asegurar viñetas
+    li {
+      margin-bottom: 5px;
+      color: var(--app-color-text-dark) !important; /* Elementos de lista negros */
+    }
+  }
+}
+
+ion-footer {
+  --background: var(--app-color-white);
+  padding: 10px 20px;
+  border-top: 1px solid var(--ion-color-light);
+  flex-shrink: 0; /* Asegura que el footer no se encoja */
+}
+
+.main-button {
+  --background: var(--ion-color-primary); 
+  --color: var(--ion-color-primary-contrast);
+  --border-radius: 10px;
+  height: 50px;
+  font-weight: bold;
+  font-size: 16px;
+  text-transform: uppercase;
+  transition: background-color 0.3s ease, opacity 0.3s ease;
+}
+
+.main-button[disabled] {
+  --background: var(--ion-color-medium); 
+  --color: var(--ion-color-medium-contrast); 
+  opacity: 0.6;
+  cursor: not-allowed;
+}

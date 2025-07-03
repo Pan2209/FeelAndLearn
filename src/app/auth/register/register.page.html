@@ -1,0 +1,58 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/auth/login" text="Atrás"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Registrarse</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content-wrapper">
+    <div class="top-image-container">
+      <img src="assets/ionic-logo.png" alt="Registro Imagen" class="register-top-image">
+    </div>
+
+    <h2 class="ion-text-center">Crea tu cuenta</h2>
+
+    <div class="user-icon-container">
+      <ion-icon name="person-circle-outline" class="user-icon"></ion-icon>
+    </div>
+
+    <ion-text color="primary" class="ion-text-center" [class.hidden-message]="!message">
+      <p>{{ message }}</p>
+    </ion-text>
+
+    <div class="form-container">
+      <ion-item class="custom-input-item">
+        <ion-label position="floating">Usuario</ion-label>
+        <ion-input type="text" [(ngModel)]="username"></ion-input>
+        </ion-item>
+
+      <ion-item class="custom-input-item">
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input type="email" [(ngModel)]="email"></ion-input>
+        </ion-item>
+
+      <ion-item class="custom-input-item">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="password"></ion-input>
+        </ion-item>
+
+      <ion-item class="custom-input-item">
+        <ion-label position="floating">Confirmar Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="confirmPassword"></ion-input>
+        </ion-item>
+
+      <ion-item lines="none" class="privacy-checkbox">
+        <ion-checkbox slot="start" [(ngModel)]="privacyAccepted" [disabled]="!hasReadPrivacyPolicy"></ion-checkbox>
+        <ion-label>
+          Acepto las Políticas de Privacidad
+        </ion-label>
+        <a (click)="openPrivacyModal()" class="privacy-link">Conocer más</a>
+      </ion-item>
+
+      <ion-button expand="block" class="ion-margin-top main-button" (click)="register()" [disabled]="!privacyAccepted">REGISTRARSE</ion-button>
+    </div>
+  </div>
+</ion-content>

@@ -1,0 +1,43 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/" text="Atrás"></ion-back-button>
+    </ion-buttons>
+    <ion-title>Acceder</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="content-wrapper ion-padding">
+    <div class="image-container ion-margin-bottom">
+      <img src="assets/black-girl-read.png" alt="Bienvenido!" class="welcome-image">
+    </div>
+
+    <h2 class="ion-text-center">Bienvenido!</h2>
+
+    <ion-text color="primary" class="ion-text-center">
+      <p>{{ message }}</p>
+    </ion-text>
+
+    <div class="form-container">
+      <ion-item class="custom-input-item">
+        <ion-label position="floating">Correo Electrónico</ion-label>
+        <ion-input type="email" [(ngModel)]="email" placeholder=""></ion-input>
+      </ion-item>
+      <ion-item class="custom-input-item ion-margin-top">
+        <ion-label position="floating">Contraseña</ion-label>
+        <ion-input type="password" [(ngModel)]="password" placeholder=""></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" class="ion-margin-top main-button" (click)="login()">ACCEDER</ion-button>
+
+      <p class="ion-text-center ion-margin-top forgot-password">
+        <a routerLink="/auth/forgot-password">Olvidaste tu contraseña?</a>
+      </p>
+
+      <p class="ion-text-center ion-margin-top no-account">
+        NO TIENES CUENTA? <a [routerLink]="['/auth/register']">REGISTRATE!</a>
+      </p>
+    </div>
+  </div>
+</ion-content>

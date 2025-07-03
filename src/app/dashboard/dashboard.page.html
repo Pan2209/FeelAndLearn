@@ -1,0 +1,63 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-back-button defaultHref="/auth/login"></ion-back-button>
+      <!-- Usar defaultHref para ir a login, aunque idealmente no debería haber un "back" directo a login después de logearse -->
+    </ion-buttons>
+    <ion-title>Feel & Learn</ion-title>
+    <!-- Puedes añadir un botón de "Ajustes" aquí a la derecha si lo deseas -->
+    <ion-buttons slot="end">
+      <ion-button (click)="logout()">
+        <ion-icon name="log-out-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="main-content-wrapper ion-padding">
+    <div class="welcome-section">
+      <h1>Comienza a</h1>
+      <h2>Aprender</h2>
+    </div>
+
+    <ion-grid class="options-grid">
+      <ion-row>
+        <ion-col size="6">
+          <ion-card class="option-card learn-abc">
+            <ion-card-content class="card-content-center">
+              <img src="assets/abc.png" alt="Aprender el Abecedario" class="card-icon">
+              <h3>Aprender el<br>Abecedario</h3>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="6">
+          <ion-card class="option-card practice-letters">
+            <ion-card-content class="card-content-center">
+              <img src="assets/practice.png" alt="Practicar Letras" class="card-icon">
+              <h3>Practicar<br>Letras</h3>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+      <ion-row>
+        <ion-col size="6">
+          <ion-card class="option-card view-progress">
+            <ion-card-content class="card-content-center">
+              <img src="assets/progress.png" alt="Ver Progreso" class="card-icon">
+              <h3>Ver Progreso</h3>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+        <ion-col size="6">
+          <ion-card class="option-card settings-contact">
+            <ion-card-content class="card-content-center">
+              <img src="assets/settings.png" alt="Ajustes y Contacto" class="card-icon">
+              <h3>Ajustes y<br>Contacto</h3>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>
