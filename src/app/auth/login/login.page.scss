@@ -47,9 +47,9 @@ h2 {
 }
 
 /* Estilos de los inputs personalizados (ion-item.custom-input-item)
-   Estos estilos son ahora principalmente controlados en variables.scss para consistencia.
-   Aquí se mantienen si necesitas alguna sobrescritura específica de esta página,
-   pero si no, podrían simplificarse.
+    Estos estilos son ahora principalmente controlados en variables.scss para consistencia.
+    Aquí se mantienen si necesitas alguna sobrescritura específica de esta página,
+    pero si no, podrían simplificarse.
 */
 ion-item.custom-input-item {
   position: relative; /* Importante para posicionar el label absolutamente */
@@ -60,15 +60,16 @@ ion-item.custom-input-item {
 }
 
 /* Los estilos de ion-label y ion-input dentro de ion-item.custom-input-item
-   han sido movidos y centralizados en variables.scss para una mejor gestión.
-   Si tienes alguna necesidad específica de login.page.scss que no se resuelva
-   globalmente, puedes añadirla aquí con cuidado.
+    han sido movidos y centralizados en variables.scss para una mejor gestión.
+    Si tienes alguna necesidad específica de login.page.scss que no se resuelva
+    globalmente, puedes añadirla aquí con cuidado.
 */
 
 .forgot-password, .no-account {
   font-size: 14px;
-  color: var(--app-color-text-dark);
+  color: var(--app-color-text-dark); // Color original del texto
   a {
+    // Este estilo se aplicará si se usa <a>, pero ahora usaremos .link-text
     color: var(--ion-color-primary);
     text-decoration: none;
     font-weight: bold;
@@ -78,11 +79,27 @@ ion-item.custom-input-item {
 .forgot-password {
   margin-top: 20px; /* Espacio para separar del botón de ACCEDER */
   margin-bottom: 10px; /* Espacio antes del "NO TIENES CUENTA?" */
+  text-align: center; // Asegurar que esté centrado como en tu imagen
+}
+
+// NUEVO: Estilo para los textos clickeables (Olvidaste tu contraseña? y REGISTRATE!)
+.link-text {
+  color: var(--ion-color-primary) !important; // Usa el color primario (azul del botón ACCEDER)
+  font-weight: bold;
+  cursor: pointer; // Indica que es clickeable
+  text-decoration: none; // Asegura que no tenga subrayado
+}
+
+.main-button {
+  // Estilos definidos globalmente en variables.scss
+  width: 100%;
+  max-width: 350px; // Coincide con el max-width del form-container
+  margin-bottom: 40px; // Aumentar el margen inferior para separar del texto de registro
 }
 
 .no-account {
   text-align: center;
-  margin-top: 0px; /* Espacio controlado por el párrafo anterior */
+  margin-top: 0px; /* Se ajusta con el margin-bottom del botón */
   font-size: 14px;
   color: var(--app-color-text-dark); /* Color de texto oscuro */
 }

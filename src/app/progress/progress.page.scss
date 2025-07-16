@@ -1,0 +1,90 @@
+/* src/app/progress/progress.page.scss */
+
+ion-toolbar {
+  --background: var(--app-color-white);
+  --color: var(--app-color-text-dark);
+  ion-title {
+    color: var(--app-color-text-dark);
+  }
+  ion-buttons {
+    ion-button {
+      --color: var(--app-color-text-dark);
+    }
+  }
+}
+
+.progress-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 20px;
+  background: var(--app-color-white);
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--app-color-text-dark);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+ion-list {
+  background: transparent;
+  padding: 0;
+}
+
+.progress-item {
+  --background: var(--app-color-input-background);
+  border-radius: 10px;
+  border: 1px solid var(--app-color-input-border);
+  margin-bottom: 15px;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --inner-padding-end: 0;
+  --inner-border-width: 0;
+
+  ion-label {
+    h3 {
+      font-size: 16px;
+      font-weight: bold;
+      color: var(--app-color-text-dark);
+      margin-bottom: 5px;
+    }
+    p {
+      font-size: 14px;
+      color: var(--app-color-text-input-label);
+      margin: 0;
+    }
+  }
+
+  .percentage-text {
+    font-size: 18px;
+    font-weight: bold;
+    color: var(--app-color-text-dark);
+  }
+
+  .percentage-text.high-score {
+    color: var(--ion-color-success);
+  }
+}
+
+.summary-card {
+  --background: var(--ion-color-tertiary);
+  color: var(--app-color-text-dark);
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+
+  ion-card-header {
+    padding-bottom: 0;
+  }
+  ion-card-title {
+    font-size: 20px;
+    font-weight: bold;
+    color: var(--app-color-text-dark);
+  }
+  ion-card-content {
+    font-size: 14px;
+    color: var(--app-color-text-dark);
+  }
+}

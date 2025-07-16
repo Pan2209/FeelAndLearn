@@ -1,0 +1,73 @@
+/* src/app/settings/settings.page.scss */
+
+ion-toolbar {
+  --background: var(--app-color-white);
+  --color: var(--app-color-text-dark);
+  ion-title {
+    color: var(--app-color-text-dark);
+  }
+  ion-buttons {
+    ion-button {
+      --color: var(--app-color-text-dark);
+    }
+  }
+}
+
+.settings-content-wrapper {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  padding-top: 20px;
+  background: var(--app-color-white);
+}
+
+.section-title {
+  font-size: 22px;
+  font-weight: bold;
+  color: var(--app-color-text-dark);
+  margin-bottom: 20px;
+  text-align: center;
+}
+
+ion-list {
+  background: transparent;
+  padding: 0;
+  margin-bottom: 30px;
+}
+
+.settings-item {
+  --background: var(--app-color-input-background);
+  border-radius: 10px;
+  border: 1px solid var(--app-color-input-border);
+  margin-bottom: 15px;
+  --padding-start: 15px;
+  --padding-end: 15px;
+  --inner-padding-end: 0;
+  --inner-border-width: 0;
+
+  ion-label {
+    font-size: 14px;
+    color: var(--app-color-text-input-label);
+  }
+
+  ion-input {
+    font-size: 16px;
+    color: var(--app-color-text-input-value);
+    --padding-start: 0;
+    --padding-end: 0;
+  }
+
+  ion-text {
+    font-size: 16px;
+    color: var(--app-color-text-input-value);
+  }
+}
+
+ion-button[fill="outline"] {
+  --border-color: var(--ion-color-danger);
+  --color: var(--ion-color-danger);
+}
+
+.main-button {
+  // Ya definido en variables.scss
+}

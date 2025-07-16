@@ -1,3 +1,4 @@
+<!-- src/app/auth/login/login.page.html -->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -29,14 +30,21 @@
         <ion-input type="password" [(ngModel)]="password" placeholder=""></ion-input>
       </ion-item>
 
-      <ion-button expand="block" class="ion-margin-top main-button" (click)="login()">ACCEDER</ion-button>
-
+      <!-- "Olvidaste tu contraseña?" debe ser presionable y azul -->
       <p class="ion-text-center ion-margin-top forgot-password">
-        <a routerLink="/auth/forgot-password">Olvidaste tu contraseña?</a>
+        <!-- Se hace clickeable con (click) y se le da color con color="primary" -->
+        <ion-text color="primary" (click)="goToPasswordReset()">Olvidaste tu contraseña?</ion-text>
       </p>
 
-      <p class="ion-text-center ion-margin-top no-account">
-        NO TIENES CUENTA? <a [routerLink]="['/auth/register']">REGISTRATE!</a>
+      <ion-button expand="block" class="ion-margin-top main-button" (click)="login()" [disabled]="loading">
+        <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+        <span *ngIf="!loading">ACCEDER</span>
+      </ion-button>
+
+      <!-- "NO TIENES CUENTA? REGISTRATE!" debe estar más separado y "REGISTRATE!" azul -->
+      <!-- Se añade ion-margin-top para la separación y color="primary" para REGISTRATE! -->
+      <p class="ion-text-center no-account ion-margin-top">
+        NO TIENES CUENTA? <ion-text color="primary" (click)="goToRegister()">REGISTRATE!</ion-text>
       </p>
     </div>
   </div>

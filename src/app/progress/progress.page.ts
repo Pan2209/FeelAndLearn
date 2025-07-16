@@ -1,20 +1,35 @@
+// src/app/progress/progress.page.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonContent, IonHeader, IonTitle, IonToolbar } from '@ionic/angular/standalone';
+import { IonicModule } from '@ionic/angular';
+import { Router } from '@angular/router';
+import { addIcons } from 'ionicons';
+import { arrowBackOutline } from 'ionicons/icons';
 
 @Component({
   selector: 'app-progress',
   templateUrl: './progress.page.html',
   styleUrls: ['./progress.page.scss'],
   standalone: true,
-  imports: [IonContent, IonHeader, IonTitle, IonToolbar, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class ProgressPage implements OnInit {
 
-  constructor() { }
+  progressData = [
+    { lesson: 'Letra A', correct: 8, total: 10, percentage: 80 },
+    { lesson: 'Letra B', correct: 7, total: 10, percentage: 70 },
+    { lesson: 'Letra C', correct: 9, total: 10, percentage: 90 },
+    { lesson: 'Letra D', correct: 6, total: 10, percentage: 60 },
+  ];
 
-  ngOnInit() {
+  constructor(private router: Router) {
+    addIcons({ arrowBackOutline });
   }
 
+  ngOnInit() { }
+
+  goBack() {
+    this.router.navigateByUrl('/dashboard');
+  }
 }

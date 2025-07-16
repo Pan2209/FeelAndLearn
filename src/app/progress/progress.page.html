@@ -1,13 +1,37 @@
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>progress</ion-title>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Ver Progreso</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">progress</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="progress-content-wrapper ion-padding">
+    <h2 class="section-title">Tu Progreso de Aprendizaje</h2>
+
+    <ion-list lines="none" class="progress-list">
+      <ion-item *ngFor="let data of progressData" class="progress-item">
+        <ion-label>
+          <h3>{{ data.lesson }}</h3>
+          <p>Correctas: {{ data.correct }} / {{ data.total }}</p>
+        </ion-label>
+        <ion-text slot="end" class="percentage-text" [class.high-score]="data.percentage >= 80">
+          {{ data.percentage }}%
+        </ion-text>
+      </ion-item>
+    </ion-list>
+
+    <ion-card class="summary-card ion-margin-top">
+      <ion-card-header>
+        <ion-card-title>Resumen General</ion-card-title>
+      </ion-card-header>
+      <ion-card-content>
+        <p>¡Sigue practicando para mejorar!</p>
+      </ion-card-content>
+    </ion-card>
+  </div>
 </ion-content>

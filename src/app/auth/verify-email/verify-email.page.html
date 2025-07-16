@@ -1,0 +1,35 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-title>Verifica tu Correo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true" class="ion-padding">
+  <div class="verify-email-container">
+    <ion-icon name="mail-outline" class="email-icon"></ion-icon>
+    <h1>Verifica tu Correo Electrónico</h1>
+    <p>
+      Hemos enviado un enlace de verificación a tu correo electrónico:
+      <strong *ngIf="currentUser">{{ currentUser.email }}</strong>
+      Por favor, revisa tu bandeja de entrada y haz clic en el enlace para verificar tu cuenta.
+    </p>
+    <p>
+      Si no lo encuentras, revisa tu carpeta de spam o correo no deseado.
+    </p>
+
+    <ion-button expand="block" class="main-button ion-margin-top" (click)="sendVerificationEmail()" [disabled]="loading">
+      <ion-spinner *ngIf="loading" name="crescent"></ion-spinner>
+      <ion-icon *ngIf="!loading" name="refresh-outline" slot="start"></ion-icon>
+      <span *ngIf="!loading">Reenviar Correo de Verificación</span>
+    </ion-button>
+
+    <ion-button expand="block" fill="outline" class="secondary-button ion-margin-top" (click)="reloadUserAndCheckVerification()">
+      <ion-icon name="checkmark-circle-outline" slot="start"></ion-icon>
+      Ya verifiqué mi correo
+    </ion-button>
+
+    <ion-button expand="block" fill="clear" class="logout-button ion-margin-top" (click)="logout()">
+      Cerrar sesión
+    </ion-button>
+  </div>
+</ion-content>

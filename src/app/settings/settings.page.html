@@ -1,13 +1,51 @@
+<!-- src/app/settings/settings.page.html -->
 <ion-header [translucent]="true">
   <ion-toolbar>
-    <ion-title>settings</ion-title>
+    <ion-buttons slot="start">
+      <!-- Botón de atrás para volver al dashboard -->
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Ajustes</ion-title>
   </ion-toolbar>
 </ion-header>
 
 <ion-content [fullscreen]="true">
-  <ion-header collapse="condense">
-    <ion-toolbar>
-      <ion-title size="large">settings</ion-title>
-    </ion-toolbar>
-  </ion-header>
+  <div class="settings-content-wrapper ion-padding">
+    <h2 class="section-title">Mi Cuenta</h2>
+
+    <ion-list lines="none" class="account-list">
+      <ion-item class="settings-item">
+        <ion-label position="stacked">Usuario</ion-label>
+        <ion-input [(ngModel)]="username" readonly></ion-input>
+      </ion-item>
+
+      <ion-item class="settings-item">
+        <ion-label position="stacked">Correo</ion-label>
+        <ion-input type="email" [(ngModel)]="email" readonly></ion-input>
+      </ion-item>
+
+      <ion-button expand="block" class="main-button ion-margin-top" (click)="changePassword()">
+        Cambiar Contraseña
+      </ion-button>
+      <ion-button expand="block" fill="outline" color="danger" class="ion-margin-top" (click)="logout()">
+        Cerrar Sesión
+      </ion-button>
+    </ion-list>
+
+    <h2 class="section-title ion-margin-top">Contacto</h2>
+
+    <ion-list lines="none" class="contact-list">
+      <ion-item class="settings-item">
+        <ion-label>Correo:</ion-label>
+        <!-- CORRECCIÓN: Escapado el @ para evitar el error NG5002 -->
+        <ion-text slot="end">correo.contacto&#64;feelnlearn.com</ion-text>
+      </ion-item>
+      <ion-item class="settings-item">
+        <ion-label>Teléfono:</ion-label>
+        <ion-text slot="end">0942526720</ion-text>
+      </ion-item>
+    </ion-list>
+  </div>
 </ion-content>

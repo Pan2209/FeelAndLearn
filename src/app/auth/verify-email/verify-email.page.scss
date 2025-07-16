@@ -1,0 +1,65 @@
+.verify-email-container {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  text-align: center;
+  background: var(--app-color-white);
+  padding: 20px;
+
+  .email-icon {
+    font-size: 80px;
+    color: var(--ion-color-primary);
+    margin-bottom: 20px;
+  }
+
+  h1 {
+    font-size: 24px;
+    font-weight: bold;
+    color: var(--app-color-text-dark);
+    margin-bottom: 15px;
+  }
+
+  p {
+    font-size: 16px;
+    color: var(--app-color-text-input-label);
+    line-height: 1.5;
+    margin-bottom: 20px;
+    max-width: 500px;
+  }
+
+  strong {
+    color: var(--app-color-text-dark);
+    font-weight: bold;
+  }
+
+  .main-button {
+    width: 100%;
+    max-width: 350px;
+    --background: var(--ion-color-primary);
+    --color: var(--app-color-white);
+    font-weight: bold;
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  .secondary-button {
+    width: 100%;
+    max-width: 350px;
+    --border-color: var(--ion-color-primary);
+    --color: var(--ion-color-primary);
+    font-weight: bold;
+    height: 48px;
+    border-radius: 10px;
+  }
+
+  .logout-button {
+    --color: var(--app-color-text-input-label); // Un color más sutil para cerrar sesión
+    font-weight: normal;
+  }
+
+  ion-spinner {
+    margin-right: 8px;
+  }
+}

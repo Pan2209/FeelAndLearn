@@ -1,5 +1,7 @@
+// src/app/services/firebase.service.ts
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut } from '@angular/fire/auth';
+// Importaciones existentes de AngularFire, más sendPasswordResetEmail y sendEmailVerification
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, sendEmailVerification } from '@angular/fire/auth';
 import { Firestore, collection, addDoc, getDocs } from '@angular/fire/firestore';
 
 @Injectable({
@@ -40,6 +42,26 @@ export class FirebaseService {
     }
   }
 
+  async sendPasswordResetEmail(email: string): Promise<void> {
+    try {
+      await sendPasswordResetEmail(this.auth, email);
+      console.log('Correo de restablecimiento de contraseña enviado a:', email);
+    } catch (e: any) {
+      console.error('Error al enviar correo de restablecimiento:', e);
+      throw e;
+    }
+  }
+
+  async sendVerificationEmail(user: any): Promise<void> {
+    try {
+      await sendEmailVerification(user);
+      console.log('Correo de verificación enviado al usuario:', user.email);
+    } catch (e: any) {
+      console.error('Error al enviar correo de verificación:', e);
+      throw e;
+    }
+  }
+
   // --- Métodos de Firestore (Base de Datos) ---
 
   async addTestDocument(data: any): Promise<any> {
@@ -66,4 +88,9 @@ export class FirebaseService {
       throw e;
     }
   }
-}   
+
+  // MÉTODO AÑADIDO: Para obtener el usuario actualmente autenticado
+  getCurrentUser() {
+    return this.auth.currentUser;
+  }
+}
