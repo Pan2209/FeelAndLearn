@@ -12,7 +12,7 @@ ion-header {
 }
 
 ion-title {
-  color: var(--app-color-text-light) !important; /* FORZAR Título blanco si el fondo del toolbar es primario oscuro */
+  color: var(--app-color-text-dark important);
 }
 
 ion-buttons ion-button {
