@@ -1,4 +1,3 @@
-// src/app/dashboard/dashboard.page.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -18,11 +17,13 @@ import { FirebaseService } from '../services/firebase.service';
 })
 export class DashboardPage implements OnInit {
 
+  private readonly ESP32_URL = 'http://10.10.4.73';
+
   constructor(private firebaseService: FirebaseService, private router: Router) {
     addIcons({ logOutOutline });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   async logout() {
     try {
@@ -34,13 +35,26 @@ export class DashboardPage implements OnInit {
     }
   }
 
-  // Método para navegar a la página de Ajustes
   goToSettings() {
     this.router.navigateByUrl('/settings');
   }
 
-  // Método para navegar a la página de Ver Progreso
   goToProgress() {
     this.router.navigateByUrl('/progress');
+  }
+
+  startAlphabet() {
+    const letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+    letras.forEach((letra, index) => {
+      setTimeout(() => {
+        fetch(`${this.ESP32_URL}/mostrar?letra=${letra}`)
+          .then(() => console.log(`Letra ${letra} enviada al ESP32`))
+          .catch(err => console.error(`Error enviando ${letra}`, err));
+      }, index * 2000);
+    });
+  }
+
+  goToPractice() {
+    this.router.navigateByUrl('/practices');
   }
 }

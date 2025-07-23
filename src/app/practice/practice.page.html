@@ -1,0 +1,15 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Practicar Letras</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <ion-grid>
+    <ion-row *ngFor="let fila of letrasChunked">
+      <ion-col *ngFor="let letra of fila" size="3">
+        <ion-button expand="full" (click)="enviarLetra(letra)">{{ letra }}</ion-button>
+      </ion-col>
+    </ion-row>
+  </ion-grid>
+</ion-content>
