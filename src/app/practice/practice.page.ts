@@ -32,3 +32,4 @@ export class PracticePage implements OnInit {
       .catch(err => console.error(`Error al enviar ${letra}`, err));
   }
 }
+ 
