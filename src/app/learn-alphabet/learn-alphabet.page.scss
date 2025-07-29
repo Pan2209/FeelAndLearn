@@ -1,0 +1,87 @@
+ion-toolbar {
+  --background: var(--app-color-white);
+  --color: var(--app-color-text-dark);
+  ion-title {
+    color: var(--app-color-text-dark);
+  }
+  ion-buttons {
+    ion-button {
+      --color: var(--app-color-text-dark);
+    }
+  }
+}
+
+ion-content {
+  --background: none; /* Asegura que el fondo de ion-content sea transparente para mostrar la imagen */
+}
+
+.background-image {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background-image: url('/assets/learn-background.png'); /* Ruta de la imagen */
+  background-size: cover;
+  background-position: center;
+  background-repeat: no-repeat;
+  filter: brightness(0.8); /* Oscurece un poco la imagen para mejor legibilidad */
+  z-index: -1; /* Envía la imagen al fondo */
+}
+
+.alphabet-grid-container {
+  display: flex;
+  justify-content: center;
+  align-items: flex-start; /* Alinea el contenido al inicio para que el scroll funcione */
+  height: 100%;
+  overflow-y: auto; /* Permite el scroll si el contenido es demasiado grande */
+  padding-top: 20px;
+  padding-bottom: 20px;
+}
+
+.alphabet-grid {
+  width: 100%;
+  max-width: 500px; /* Limita el ancho de la cuadrícula si es necesario */
+}
+
+.letter-card {
+  --background: rgba(255, 255, 255, 0.9); /* Fondo ligeramente transparente para las tarjetas */
+  border-radius: 10px;
+  box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+  margin-bottom: 15px; /* Espacio entre las tarjetas */
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 100px; /* Altura fija para las tarjetas para consistencia */
+}
+
+.card-content-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  width: 100%;
+  height: 100%;
+}
+
+.letter-text {
+  font-size: 5em; /* Tamaño grande para la letra */
+  font-weight: bold;
+  color: var(--ion-color-primary); /* Color de la letra */
+  text-transform: lowercase; /* Asegura que la letra se muestre en minúsculas */
+}
+
+/* Ajustes para pantallas más pequeñas para mantener 3 letras por fila */
+@media (max-width: 576px) {
+  .letter-card {
+    height: 80px; /* Un poco más pequeñas en móviles */
+  }
+  .letter-text {
+    font-size: 4em;
+  }
+}
+
+/* Asegura que las columnas se comporten como 3 por fila */
+ion-col[size="4"] {
+  flex: 0 0 33.3333%;
+  max-width: 33.3333%;
+}

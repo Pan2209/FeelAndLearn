@@ -1,0 +1,46 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Practicar Letras</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="background-image"></div>
+  <div class="practice-container ion-padding">
+
+    <div *ngIf="!practiceEnded" class="current-practice-section">
+      <p class="attempts-counter">Letra {{ currentPracticeIndex + 1 }} de {{ alphabet.length }}</p>
+      <img [src]="currentLetterImageUrl" [alt]="'Letra ' + currentLetter" class="letter-display-image">
+
+      <div class="feedback-buttons">
+        <ion-button expand="block" size="large" color="success" (click)="markAnswer(true)">
+          Correcto
+        </ion-button>
+        <ion-button expand="block" size="large" color="danger" (click)="markAnswer(false)">
+          Incorrecto
+        </ion-button>
+      </div>
+    </div>
+
+    <div *ngIf="practiceEnded" class="results-section">
+      <h2 class="section-title">Resultados de la Práctica</h2>
+      <ion-card class="results-card">
+        <ion-card-content>
+          <p>Aciertos: <span class="correct-count">{{ correctAnswers }}</span></p>
+          <p>Fallos: <span class="incorrect-count">{{ incorrectAnswers }}</span></p>
+          <p>Total de Letras Practicadas: {{ alphabet.length }}</p>
+        </ion-card-content>
+      </ion-card>
+      <!-- CAMBIO AQUÍ: Botón para ir a la página de progreso -->
+      <ion-button expand="block" size="large" (click)="goToProgressPage()">
+        Ver Progreso
+      </ion-button>
+    </div>
+
+  </div>
+</ion-content>

@@ -1,4 +1,3 @@
-// src/app/dashboard/dashboard.page.ts
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
@@ -34,13 +33,20 @@ export class DashboardPage implements OnInit {
     }
   }
 
-  // Método para navegar a la página de Ajustes
   goToSettings() {
     this.router.navigateByUrl('/settings');
   }
 
-  // Método para navegar a la página de Ver Progreso
   goToProgress() {
     this.router.navigateByUrl('/progress');
+  }
+
+  goToLearnAlphabet() {
+    this.router.navigateByUrl('/learn-alphabet');
+  }
+
+  // DESCOMENTADO: Método para navegar a la página de Practicar Letras
+  goToPracticeLetters() {
+    this.router.navigateByUrl('/practice-letters');
   }
 }

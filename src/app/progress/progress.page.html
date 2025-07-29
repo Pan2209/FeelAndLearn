@@ -16,8 +16,9 @@
     <ion-list lines="none" class="progress-list">
       <ion-item *ngFor="let data of progressData" class="progress-item">
         <ion-label>
-          <h3>{{ data.lesson }}</h3>
-          <p>Correctas: {{ data.correct }} / {{ data.total }}</p>
+          <!-- Mostrar la letra en minúscula -->
+          <h3>Letra {{ data.letter | uppercase }}</h3>
+          <p>Aciertos: {{ data.correct }} / {{ data.total }}</p>
         </ion-label>
         <ion-text slot="end" class="percentage-text" [class.high-score]="data.percentage >= 80">
           {{ data.percentage }}%
@@ -30,6 +31,9 @@
         <ion-card-title>Resumen General</ion-card-title>
       </ion-card-header>
       <ion-card-content>
+        <p>Aciertos Totales: {{ overallCorrect }}</p>
+        <p>Intentos Totales: {{ overallTotal }}</p>
+        <p>Porcentaje General: {{ overallPercentage }}%</p>
         <p>¡Sigue practicando para mejorar!</p>
       </ion-card-content>
     </ion-card>

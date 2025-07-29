@@ -1,8 +1,7 @@
-// src/app/services/firebase.service.ts
 import { Injectable } from '@angular/core';
-// Importaciones existentes de AngularFire, más sendPasswordResetEmail y sendEmailVerification
 import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, sendEmailVerification } from '@angular/fire/auth';
-import { Firestore, collection, addDoc, getDocs } from '@angular/fire/firestore';
+// Importaciones adicionales para Firestore: doc, setDoc, getDoc
+import { Firestore, collection, addDoc, getDocs, doc, setDoc, getDoc } from '@angular/fire/firestore';
 
 @Injectable({
   providedIn: 'root'
@@ -89,8 +88,64 @@ export class FirebaseService {
     }
   }
 
-  // MÉTODO AÑADIDO: Para obtener el usuario actualmente autenticado
   getCurrentUser() {
     return this.auth.currentUser;
+  }
+
+  // NUEVO MÉTODO: Guardar o actualizar el progreso de una letra específica para un usuario
+  async saveUserLetterProgress(userId: string, letter: string, correctCount: number, totalCount: number): Promise<void> {
+    if (!userId) {
+      console.error("Error: userId es nulo o indefinido al guardar el progreso.");
+      return;
+    }
+    const userProgressDocRef = doc(this.firestore, `users/${userId}/progress/overall`);
+
+    try {
+      // Obtener el progreso actual del usuario
+      const docSnap = await getDoc(userProgressDocRef);
+      let currentProgress = docSnap.exists() ? docSnap.data() : {};
+
+      // Obtener los datos de la letra actual o inicializarlos
+      const letterData = currentProgress[letter] || { correct: 0, total: 0 };
+
+      // Sumar los nuevos resultados
+      letterData.correct += correctCount;
+      letterData.total += totalCount;
+
+      // Actualizar el progreso para la letra
+      currentProgress = {
+        ...currentProgress,
+        [letter]: letterData
+      };
+
+      // Guardar el documento actualizado
+      await setDoc(userProgressDocRef, currentProgress);
+      console.log(`Progreso de la letra '${letter}' guardado para el usuario ${userId}`);
+    } catch (e: any) {
+      console.error(`Error al guardar el progreso de la letra '${letter}':`, e);
+      throw e;
+    }
+  }
+
+  // NUEVO MÉTODO: Obtener todo el progreso de un usuario
+  async getUserProgress(userId: string): Promise<{ [key: string]: { correct: number, total: number } }> {
+    if (!userId) {
+      console.error("Error: userId es nulo o indefinido al obtener el progreso.");
+      return {};
+    }
+    const userProgressDocRef = doc(this.firestore, `users/${userId}/progress/overall`);
+
+    try {
+      const docSnap = await getDoc(userProgressDocRef);
+      if (docSnap.exists()) {
+        return docSnap.data() as { [key: string]: { correct: number, total: number } };
+      } else {
+        console.log("No se encontró progreso para el usuario:", userId);
+        return {};
+      }
+    } catch (e: any) {
+      console.error("Error al obtener el progreso del usuario:", e);
+      throw e;
+    }
   }
 }

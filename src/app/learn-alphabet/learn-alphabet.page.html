@@ -1,0 +1,27 @@
+<ion-header [translucent]="true">
+  <ion-toolbar>
+    <ion-buttons slot="start">
+      <ion-button (click)="goBack()">
+        <ion-icon name="arrow-back-outline"></ion-icon>
+      </ion-button>
+    </ion-buttons>
+    <ion-title>Aprender Abecedario</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content [fullscreen]="true">
+  <div class="background-image"></div>
+  <div class="alphabet-grid-container ion-padding">
+    <ion-grid class="alphabet-grid">
+      <ion-row *ngFor="let row of alphabetGrid" class="ion-justify-content-center">
+        <ion-col size="4" size-md="3" size-lg="2" *ngFor="let letter of row">
+          <ion-card class="letter-card" (click)="selectLetter(letter)">
+            <ion-card-content class="card-content-center">
+              <span class="letter-text">{{ letter }}</span>
+            </ion-card-content>
+          </ion-card>
+        </ion-col>
+      </ion-row>
+    </ion-grid>
+  </div>
+</ion-content>

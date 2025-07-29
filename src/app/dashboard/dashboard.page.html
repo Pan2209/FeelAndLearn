@@ -22,7 +22,7 @@
     <ion-grid class="options-grid">
       <ion-row>
         <ion-col size="6">
-          <ion-card class="option-card learn-abc">
+          <ion-card class="option-card learn-abc" (click)="goToLearnAlphabet()">
             <ion-card-content class="card-content-center">
               <img src="assets/abc.png" alt="Aprender el Abecedario" class="card-icon">
               <h3>Aprender el<br>Abecedario</h3>
@@ -30,7 +30,8 @@
           </ion-card>
         </ion-col>
         <ion-col size="6">
-          <ion-card class="option-card practice-letters">
+          <!-- HABILITADO: (click)="goToPracticeLetters()" -->
+          <ion-card class="option-card practice-letters" (click)="goToPracticeLetters()">
             <ion-card-content class="card-content-center">
               <img src="assets/practice.png" alt="Practicar Letras" class="card-icon">
               <h3>Practicar<br>Letras</h3>
