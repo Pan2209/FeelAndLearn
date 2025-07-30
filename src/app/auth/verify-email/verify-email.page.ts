@@ -20,6 +20,7 @@ export class VerifyEmailPage implements OnInit, OnDestroy {
   currentUser: User | null = null;
   loading: boolean = false;
   private refreshSubscription: Subscription | null = null;
+  private emailSentAutomatically: boolean = false;
 
   constructor(
     private router: Router,
@@ -32,32 +33,40 @@ export class VerifyEmailPage implements OnInit, OnDestroy {
   ngOnInit() {
     this.currentUser = this.firebaseService.getCurrentUser();
     if (!this.currentUser) {
+      console.warn('VerifyEmailPage: No hay usuario autenticado. Redirigiendo a login.');
       this.router.navigateByUrl('/auth/login', { replaceUrl: true });
       return;
     }
-    // Iniciar verificación en tiempo real del estado del correo
+
+    if (!this.currentUser.emailVerified && !this.emailSentAutomatically) {
+      this.sendVerificationEmail();
+      this.emailSentAutomatically = true;
+    }
+
     this.startEmailVerificationCheck();
   }
 
   ngOnDestroy(): void {
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
+      console.log('VerifyEmailPage: Suscripción de verificación de correo desuscrita.');
     }
   }
 
   async sendVerificationEmail(): Promise<void> {
     if (!this.currentUser) {
-      this.presentToast('No hay usuario autenticado.', 'danger');
+      this.presentToast('No hay usuario autenticado para enviar el correo de verificación.', 'danger');
       this.router.navigateByUrl('/auth/login', { replaceUrl: true });
       return;
     }
 
     this.loading = true;
     try {
+      console.log('VerifyEmailPage: Intentando reenviar correo de verificación...');
       await this.firebaseService.sendVerificationEmail(this.currentUser);
       this.presentToast('Correo de verificación enviado. Por favor, revisa tu bandeja de entrada.', 'success');
     } catch (error: any) {
-      console.error('Error al reenviar correo de verificación:', error);
+      console.error('VerifyEmailPage: Error al reenviar correo de verificación:', error);
       let errorMessage = 'Error al enviar el correo de verificación. Inténtalo de nuevo.';
       if (error.code === 'auth/too-many-requests') {
         errorMessage = 'Has enviado demasiados correos. Intenta de nuevo en un momento.';
@@ -70,38 +79,38 @@ export class VerifyEmailPage implements OnInit, OnDestroy {
 
   async reloadUserAndCheckVerification(): Promise<void> {
     if (!this.currentUser) {
-      this.presentToast('No hay usuario autenticado.', 'danger');
+      console.warn('VerifyEmailPage: No hay usuario autenticado al intentar recargar. Redirigiendo a login.');
+      this.presentToast('Sesión caducada. Por favor, inicia sesión de nuevo.', 'danger');
       this.router.navigateByUrl('/auth/login', { replaceUrl: true });
       return;
     }
 
     try {
-      // Forzar la recarga del usuario para obtener el estado más reciente
       await this.currentUser.reload();
-      this.currentUser = this.firebaseService.getCurrentUser(); // Obtener la instancia recargada
+      this.currentUser = this.firebaseService.getCurrentUser();
 
       if (this.currentUser?.emailVerified) {
-        this.presentToast('¡Tu correo ha sido verificado exitosamente!', 'success');
+        this.presentToast('¡Tu correo ha sido verificado exitosamente! Ahora puedes iniciar sesión.', 'success');
         if (this.refreshSubscription) {
           this.refreshSubscription.unsubscribe();
         }
-        this.router.navigateByUrl('/home', { replaceUrl: true }); // Redirigir a la página principal
+        // CRÍTICO: Redirigir a la página de inicio de sesión
+        this.router.navigateByUrl('/auth/login', { replaceUrl: true });
       } else {
-        // Solo mostrar toast si fue una acción manual de recarga y aún no está verificado
-        this.presentToast('Tu correo aún no ha sido verificado. Por favor, verifica tu bandeja de entrada.', 'warning');
+        console.log('VerifyEmailPage: Correo aún no verificado. Reintentando...');
       }
     } catch (error: any) {
-      console.error('Error al recargar el usuario o verificar el estado:', error);
+      console.error('VerifyEmailPage: Error al recargar el usuario o verificar el estado:', error);
       this.presentToast('Error al verificar el estado del correo. Inténtalo de nuevo.', 'danger');
     }
   }
 
   startEmailVerificationCheck(): void {
-    // Recargar el usuario cada pocos segundos para verificar el estado de verificación
     if (this.refreshSubscription) {
       this.refreshSubscription.unsubscribe();
     }
-    this.refreshSubscription = interval(5000).subscribe(() => { // Cada 5 segundos
+    console.log('VerifyEmailPage: Iniciando verificación automática del estado del correo cada 5 segundos.');
+    this.refreshSubscription = interval(5000).subscribe(() => {
       this.reloadUserAndCheckVerification();
     });
   }
@@ -122,7 +131,7 @@ export class VerifyEmailPage implements OnInit, OnDestroy {
       this.presentToast('Sesión cerrada.', 'success');
       this.router.navigateByUrl('/auth/login', { replaceUrl: true });
     } catch (error) {
-      console.error('Error al cerrar sesión:', error);
+      console.error('VerifyEmailPage: Error al cerrar sesión:', error);
       this.presentToast('Error al cerrar sesión. Inténtalo de nuevo.', 'danger');
     }
   }

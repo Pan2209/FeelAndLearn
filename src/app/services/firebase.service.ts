@@ -1,6 +1,5 @@
 import { Injectable } from '@angular/core';
-import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, sendEmailVerification } from '@angular/fire/auth';
-// Importaciones adicionales para Firestore: doc, setDoc, getDoc
+import { Auth, createUserWithEmailAndPassword, signInWithEmailAndPassword, signOut, sendPasswordResetEmail, sendEmailVerification, User } from '@angular/fire/auth';
 import { Firestore, collection, addDoc, getDocs, doc, setDoc, getDoc } from '@angular/fire/firestore';
 
 @Injectable({
@@ -10,14 +9,17 @@ export class FirebaseService {
 
   constructor(private auth: Auth, private firestore: Firestore) { }
 
-  // --- Métodos de Autenticación ---
-
-  async registerUser(email: string, password: string): Promise<any> {
+  async registerUser(email: string, password: string): Promise<User> {
     try {
+      console.log("FirebaseService: Intentando crear usuario (sin enviar verificación todavía):", email);
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
-      return userCredential.user;
+      const user = userCredential.user;
+      console.log("FirebaseService: Usuario creado exitosamente:", user.uid);
+      // CRÍTICO: Eliminado el envío automático de correo de verificación aquí.
+      // Ahora se enviará desde la página verify-email.
+      return user;
     } catch (e: any) {
-      console.error("Error al registrar: ", e);
+      console.error("FirebaseService: Error al crear usuario:", e.code, e.message);
       throw e;
     }
   }
@@ -44,24 +46,23 @@ export class FirebaseService {
   async sendPasswordResetEmail(email: string): Promise<void> {
     try {
       await sendPasswordResetEmail(this.auth, email);
-      console.log('Correo de restablecimiento de contraseña enviado a:', email);
+      console.log('FirebaseService: Correo de restablecimiento de contraseña enviado a:', email);
     } catch (e: any) {
-      console.error('Error al enviar correo de restablecimiento:', e);
+      console.error('FirebaseService: Error al enviar correo de restablecimiento:', e);
       throw e;
     }
   }
 
-  async sendVerificationEmail(user: any): Promise<void> {
+  async sendVerificationEmail(user: User): Promise<void> {
     try {
+      console.log('FirebaseService: Intentando enviar correo de verificación al usuario:', user.email);
       await sendEmailVerification(user);
-      console.log('Correo de verificación enviado al usuario:', user.email);
+      console.log('FirebaseService: Correo de verificación enviado exitosamente al usuario:', user.email);
     } catch (e: any) {
-      console.error('Error al enviar correo de verificación:', e);
+      console.error('FirebaseService: Error al enviar correo de verificación:', e.code, e.message);
       throw e;
     }
   }
-
-  // --- Métodos de Firestore (Base de Datos) ---
 
   async addTestDocument(data: any): Promise<any> {
     try {
@@ -92,59 +93,56 @@ export class FirebaseService {
     return this.auth.currentUser;
   }
 
-  // NUEVO MÉTODO: Guardar o actualizar el progreso de una letra específica para un usuario
   async saveUserLetterProgress(userId: string, letter: string, correctCount: number, totalCount: number): Promise<void> {
     if (!userId) {
-      console.error("Error: userId es nulo o indefinido al guardar el progreso.");
+      console.error("FirebaseService: userId es nulo o indefinido al guardar el progreso.");
       return;
     }
     const userProgressDocRef = doc(this.firestore, `users/${userId}/progress/overall`);
+    console.log(`FirebaseService: Intentando guardar progreso para userId: ${userId}, letra: ${letter}`);
 
     try {
-      // Obtener el progreso actual del usuario
       const docSnap = await getDoc(userProgressDocRef);
       let currentProgress = docSnap.exists() ? docSnap.data() : {};
+      console.log("FirebaseService: Progreso actual antes de actualizar:", currentProgress);
 
-      // Obtener los datos de la letra actual o inicializarlos
       const letterData = currentProgress[letter] || { correct: 0, total: 0 };
 
-      // Sumar los nuevos resultados
       letterData.correct += correctCount;
       letterData.total += totalCount;
 
-      // Actualizar el progreso para la letra
       currentProgress = {
         ...currentProgress,
         [letter]: letterData
       };
 
-      // Guardar el documento actualizado
       await setDoc(userProgressDocRef, currentProgress);
-      console.log(`Progreso de la letra '${letter}' guardado para el usuario ${userId}`);
+      console.log(`FirebaseService: Progreso de la letra '${letter}' guardado exitosamente para el usuario ${userId}`);
     } catch (e: any) {
-      console.error(`Error al guardar el progreso de la letra '${letter}':`, e);
+      console.error(`FirebaseService: Error al guardar el progreso de la letra '${letter}':`, e);
       throw e;
     }
   }
 
-  // NUEVO MÉTODO: Obtener todo el progreso de un usuario
   async getUserProgress(userId: string): Promise<{ [key: string]: { correct: number, total: number } }> {
     if (!userId) {
-      console.error("Error: userId es nulo o indefinido al obtener el progreso.");
+      console.error("FirebaseService: userId es nulo o indefinido al obtener el progreso.");
       return {};
     }
     const userProgressDocRef = doc(this.firestore, `users/${userId}/progress/overall`);
+    console.log(`FirebaseService: Intentando obtener progreso para userId: ${userId}`);
 
     try {
       const docSnap = await getDoc(userProgressDocRef);
       if (docSnap.exists()) {
+        console.log("FirebaseService: Progreso obtenido:", docSnap.data());
         return docSnap.data() as { [key: string]: { correct: number, total: number } };
       } else {
-        console.log("No se encontró progreso para el usuario:", userId);
+        console.log("FirebaseService: No se encontró progreso para el usuario:", userId);
         return {};
       }
     } catch (e: any) {
-      console.error("Error al obtener el progreso del usuario:", e);
+      console.error("FirebaseService: Error al obtener el progreso del usuario:", e);
       throw e;
     }
   }

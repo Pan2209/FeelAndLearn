@@ -26,9 +26,9 @@ export class PracticeLettersPage implements OnInit {
   currentLetter: string = '';
   currentLetterImageUrl: string = '';
 
-  correctAnswers: number = 0; // PROPIEDAD CORREGIDA
-  incorrectAnswers: number = 0; // PROPIEDAD CORREGIDA
-  practiceEnded: boolean = false; // PROPIEDAD CORREGIDA
+  correctAnswers: number = 0;
+  incorrectAnswers: number = 0;
+  practiceEnded: boolean = false;
 
   private sessionResults: { [key: string]: { correct: number, total: number } } = {};
 
@@ -56,8 +56,8 @@ export class PracticeLettersPage implements OnInit {
 
   startNewPracticeSession() {
     this.sessionResults = {};
-    this.correctAnswers = 0; // Reiniciar para la visualización de resultados
-    this.incorrectAnswers = 0; // Reiniciar para la visualización de resultados
+    this.correctAnswers = 0;
+    this.incorrectAnswers = 0;
     this.currentPracticeIndex = 0;
     this.practiceEnded = false;
     this.shuffledAlphabet = this.shuffleArray([...this.alphabet]);
@@ -71,6 +71,7 @@ export class PracticeLettersPage implements OnInit {
       this.sendLetterToBrailleDevice(this.currentLetter);
     } else {
       this.practiceEnded = true;
+      console.log("PracticeLettersPage: Sesión de práctica finalizada. Guardando resultados.");
       this.savePracticeResults();
     }
   }
@@ -87,10 +88,10 @@ export class PracticeLettersPage implements OnInit {
 
     if (isCorrect) {
       this.sessionResults[this.currentLetter].correct++;
-      this.correctAnswers++; // Actualizar para la visualización de resultados
+      this.correctAnswers++;
       this.presentToast('¡Correcto!');
     } else {
-      this.incorrectAnswers++; // Actualizar para la visualización de resultados
+      this.incorrectAnswers++;
       this.presentToast('Incorrecto.');
     }
     this.currentPracticeIndex++;
@@ -98,19 +99,21 @@ export class PracticeLettersPage implements OnInit {
   }
 
   private sendLetterToBrailleDevice(letter: string) {
-    console.log(`Enviando letra '${letter}' al dispositivo Braille para práctica.`);
+    console.log(`PracticeLettersPage: Enviando letra '${letter}' al dispositivo Braille para práctica.`);
   }
 
   private async savePracticeResults() {
     const currentUser = this.firebaseService.getCurrentUser();
     if (currentUser && currentUser.uid) {
+      console.log(`PracticeLettersPage: Usuario autenticado: ${currentUser.uid}. Procediendo a guardar resultados.`);
       for (const letter of Object.keys(this.sessionResults)) {
         const { correct, total } = this.sessionResults[letter];
+        console.log(`PracticeLettersPage: Guardando para letra '${letter}': Correctas: ${correct}, Total: ${total}`);
         await this.firebaseService.saveUserLetterProgress(currentUser.uid, letter, correct, total);
       }
       this.presentToast('Resultados de la práctica guardados.');
     } else {
-      console.warn('No hay usuario autenticado para guardar el progreso.');
+      console.warn('PracticeLettersPage: No hay usuario autenticado para guardar el progreso. Asegúrate de iniciar sesión.');
       this.presentToast('No se pudo guardar el progreso (usuario no autenticado).');
     }
   }

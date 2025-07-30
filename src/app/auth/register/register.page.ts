@@ -1,8 +1,10 @@
 import { Component, OnInit } from '@angular/core';
 import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
-import { IonicModule, ModalController } from '@ionic/angular';
+import { IonicModule, ModalController, ToastController } from '@ionic/angular'; // Agrega ToastController
 import { PrivacyPolicyModalPage } from '../privacy-policy-modal/privacy-policy-modal.page';
+import { FirebaseService } from 'src/app/services/firebase.service'; // Importa FirebaseService
+import { Router } from '@angular/router'; // Importa Router
 
 @Component({
   selector: 'app-register',
@@ -21,17 +23,21 @@ export class RegisterPage implements OnInit {
   hasReadPrivacyPolicy: boolean = false; // Controla si se ha leído la política de privacidad
   message: string = '';
 
-  constructor(private modalController: ModalController) { }
+  constructor(
+    private modalController: ModalController,
+    private firebaseService: FirebaseService, // Inyecta FirebaseService
+    private router: Router, // Inyecta Router
+    private toastController: ToastController // Inyecta ToastController
+  ) { }
 
   ngOnInit() {
-    // Inicializar hasReadPrivacyPolicy a false al cargar la página
     this.hasReadPrivacyPolicy = false;
   }
 
   async openPrivacyModal() {
     const modal = await this.modalController.create({
       component: PrivacyPolicyModalPage,
-      cssClass: 'privacy-modal-class' // Clase CSS definida en register.page.scss
+      cssClass: 'privacy-modal-class'
     });
     await modal.present();
 
@@ -39,36 +45,75 @@ export class RegisterPage implements OnInit {
     console.log('Modal dismissed with role', role);
     console.log('Modal dismissed with data', data);
 
-    // Si el modal se cerró después de haber sido visto completamente (rol 'viewed')
-    if (role === 'viewed') { // ¡AJUSTADO AQUÍ!
-      this.hasReadPrivacyPolicy = true; // El usuario ha visto la política
-      this.message = ''; // Limpiar cualquier mensaje previo
+    if (role === 'viewed') {
+      this.hasReadPrivacyPolicy = true;
+      this.message = '';
       console.log('Modal de privacidad visto y cerrado. Checkbox habilitado.');
     } else {
-      // Si se cerró por cancelar o de otra manera, no se considera leído
       this.hasReadPrivacyPolicy = false;
-      this.privacyAccepted = false; // Asegurar que el checkbox no esté marcado
+      this.privacyAccepted = false;
       console.log('Modal de privacidad no visto completamente o cancelado.');
     }
   }
 
-  register() {
-    // Lógica de registro
+  async register() { // Marca el método como async
+    // Validaciones
+    if (!this.email || !this.password || !this.confirmPassword || !this.username) { // Añade username a la validación
+      this.presentToast('Por favor, completa todos los campos.', 'danger');
+      return;
+    }
     if (this.password !== this.confirmPassword) {
-      this.message = 'Las contraseñas no coinciden.';
+      this.presentToast('Las contraseñas no coinciden.', 'danger');
+      return;
+    }
+    if (this.password.length < 6) {
+      this.presentToast('La contraseña debe tener al menos 6 caracteres.', 'danger');
       return;
     }
     if (!this.privacyAccepted) {
-      this.message = 'Debe aceptar las Políticas de Privacidad.';
+      this.presentToast('Debe aceptar las Políticas de Privacidad.', 'danger');
       return;
     }
-    // Si todo está bien, procede con el registro
-    this.message = '¡Registro exitoso!';
-    console.log('Usuario registrado:', {
-      username: this.username,
-      email: this.email,
-      password: this.password,
-      privacyAccepted: this.privacyAccepted
+
+    try {
+      // Llama al servicio de Firebase para crear el usuario
+      // NO se envía el correo de verificación aquí. Se hará desde verify-email.page.ts
+      await this.firebaseService.registerUser(this.email, this.password);
+      
+      this.presentToast('Cuenta creada. Redirigiendo para verificación de correo.', 'success');
+      // Redirige a la página de verificación
+      this.router.navigateByUrl('/verify-email'); 
+      
+    } catch (error: any) {
+      let errorMessage = 'Error al registrar. Inténtalo de nuevo.';
+      if (error.code) {
+        switch (error.code) {
+          case 'auth/email-already-in-use':
+            errorMessage = 'El correo electrónico ya está en uso.';
+            break;
+          case 'auth/invalid-email':
+            errorMessage = 'El formato del correo electrónico es inválido.';
+            break;
+          case 'auth/weak-password':
+            errorMessage = 'La contraseña es demasiado débil (mínimo 6 caracteres).';
+            break;
+          default:
+            errorMessage = `Error de Firebase: ${error.message}`;
+            break;
+        }
+      }
+      console.error('RegisterPage: Error durante el registro:', error);
+      this.presentToast(errorMessage, 'danger');
+    }
+  }
+
+  async presentToast(message: string, color: string = 'primary') {
+    const toast = await this.toastController.create({
+      message: message,
+      duration: 2500,
+      position: 'bottom',
+      color: color
     });
+    toast.present();
   }
 }

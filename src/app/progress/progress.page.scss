@@ -1,5 +1,3 @@
-/* src/app/progress/progress.page.scss */
-
 ion-toolbar {
   --background: var(--app-color-white);
   --color: var(--app-color-text-dark);
@@ -86,5 +84,21 @@ ion-list {
   ion-card-content {
     font-size: 14px;
     color: var(--app-color-text-dark);
+  }
+}
+
+.loading-spinner {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  height: 100%;
+  color: var(--ion-color-primary);
+  font-size: 1.2em;
+
+  ion-spinner {
+    width: 50px;
+    height: 50px;
+    margin-bottom: 15px;
   }
 }
