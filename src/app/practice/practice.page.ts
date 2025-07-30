@@ -8,12 +8,12 @@ import { FormsModule } from '@angular/forms';
   templateUrl: './practice.page.html',
   styleUrls: ['./practice.page.scss'],
   standalone: true,
-  imports:[IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule]
 })
 export class PracticePage implements OnInit {
   letras = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
   letrasChunked: string[][] = [];
-
+  ipESP32 = 'http://10.10.6.37'; 
   ngOnInit() {
     this.letrasChunked = this.chunk(this.letras, 6);
   }
@@ -27,9 +27,22 @@ export class PracticePage implements OnInit {
   }
 
   enviarLetra(letra: string) {
-    fetch(`http://10.10.4.73/mostrar?letra=${letra}`)
-      .then(() => console.log(`Letra ${letra} enviada al ESP32`))
-      .catch(err => console.error(`Error al enviar ${letra}`, err));
+    fetch(`${this.ipESP32}/mostrar?letra=${letra}`)
+      .then(async res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const body = await res.json();
+        console.log('✅ Enviado:', body);
+      })
+      .catch(err => console.error(`❌ Error al enviar ${letra}:`, err));
+  }
+
+  resetearServos() {
+    fetch(`${this.ipESP32}/reset`)
+      .then(async res => {
+        if (!res.ok) throw new Error(`HTTP ${res.status}`);
+        const body = await res.json();
+        console.log('🔁 Servos reiniciados:', body);
+      })
+      .catch(err => console.error('❌ Error al resetear:', err));
   }
 }
- 
