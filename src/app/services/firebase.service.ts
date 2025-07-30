@@ -91,43 +91,25 @@ export class FirebaseService {
     return this.auth.currentUser;
   }
 
-  async saveUserLetterProgress(userId: string, letter: string, correctCount: number, totalCount: number): Promise<void> {
+  // NUEVO MÉTODO: Para guardar el objeto de progreso completo en una sola operación.
+  async setOverallUserProgress(userId: string, progressData: { [key: string]: { correct: number, total: number } }): Promise<void> {
     if (!userId) {
-      console.error("FirebaseService: saveUserLetterProgress - userId es nulo o indefinido.");
+      console.error("FirebaseService: setOverallUserProgress - userId es nulo o indefinido.");
       return;
     }
     const userProgressDocRef = doc(this.firestore, `users/${userId}/progress/overall`);
-    console.log(`FirebaseService: saveUserLetterProgress - Intentando guardar para userId: ${userId}, letra: ${letter}, correctCount (sesión): ${correctCount}, totalCount (sesión): ${totalCount}`);
+    console.log(`FirebaseService: setOverallUserProgress - Intentando guardar progreso general para userId: ${userId}`);
+    console.log("FirebaseService: setOverallUserProgress - Datos a escribir:", progressData);
 
     try {
-      const docSnap = await getDoc(userProgressDocRef); 
-      let currentProgress: { [key: string]: { correct: number, total: number } } = {}; 
-      if (docSnap.exists()) {
-        currentProgress = docSnap.data() as { [key: string]: { correct: number, total: number } };
-        console.log("FirebaseService: saveUserLetterProgress - Progreso actual leido de DB:", currentProgress);
-      } else {
-        console.log("FirebaseService: saveUserLetterProgress - No existe documento de progreso, se creará uno nuevo.");
-      }
-
-      const letterData = currentProgress[letter] || { correct: 0, total: 0 };
-      console.log(`FirebaseService: saveUserLetterProgress - Datos de la letra '${letter}' ANTES de actualizar:`, letterData);
-
-      letterData.correct += correctCount;
-      letterData.total += totalCount;
-
-      currentProgress = {
-        ...currentProgress,
-        [letter]: letterData
-      };
-
-      console.log("FirebaseService: saveUserLetterProgress - Progreso FINAL a escribir en DB:", currentProgress);
-      await setDoc(userProgressDocRef, currentProgress);
-      console.log(`FirebaseService: saveUserLetterProgress - Progreso de la letra '${letter}' guardado exitosamente.`);
+      await setDoc(userProgressDocRef, progressData);
+      console.log("FirebaseService: setOverallUserProgress - Progreso general guardado exitosamente.");
     } catch (e: any) {
-      console.error(`FirebaseService: saveUserLetterProgress - Error al guardar el progreso de la letra '${letter}':`, e);
+      console.error("FirebaseService: setOverallUserProgress - Error al guardar el progreso general:", e);
       throw e;
     }
   }
+
 
   async getUserProgress(userId: string): Promise<{ [key: string]: { correct: number, total: number } }> {
     if (!userId) {
