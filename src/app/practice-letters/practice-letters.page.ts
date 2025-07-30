@@ -25,13 +25,13 @@ export class PracticeLettersPage implements OnInit {
 
   currentLetter: string = '';
   currentLetterImageUrl: string = '';
+  // Propiedad para el valor de rotación de tono aleatorio (hue-rotate)
+  randomHueRotate: string = '0deg'; 
 
   correctAnswers: number = 0;
   incorrectAnswers: number = 0;
   practiceEnded: boolean = false;
 
-  // Almacenar los resultados por letra durante la sesión de práctica
-  // Esto registrará 1 o 0 aciertos para cada letra en la sesión actual
   private sessionResults: { [key: string]: { correct: number, total: number } } = {};
 
   constructor(
@@ -70,9 +70,13 @@ export class PracticeLettersPage implements OnInit {
   loadNextLetter() {
     if (this.currentPracticeIndex < this.shuffledAlphabet.length) {
       this.currentLetter = this.shuffledAlphabet[this.currentPracticeIndex];
-      this.currentLetterImageUrl = this.getLetterImageUrl(this.currentLetter);
+      // CAMBIO CRÍTICO: Fondo transparente y letra en minúscula
+      // El color del texto (FFFFFF) será el que rote con hue-rotate
+      this.currentLetterImageUrl = `https://placehold.co/250x250/transparent/FFFFFF?text=${this.currentLetter}`; 
+      // Generar un valor de rotación de tono aleatorio (0 a 359 grados)
+      this.randomHueRotate = `${Math.floor(Math.random() * 360)}deg`;
       this.sendLetterToBrailleDevice(this.currentLetter);
-      console.log(`PracticeLettersPage: Cargando letra ${this.currentPracticeIndex + 1}/${this.shuffledAlphabet.length}: '${this.currentLetter}'`);
+      console.log(`PracticeLettersPage: Cargando letra ${this.currentPracticeIndex + 1}/${this.shuffledAlphabet.length}: '${this.currentLetter}' con filtro hue-rotate: ${this.randomHueRotate}`);
     } else {
       this.practiceEnded = true; // Todas las letras han sido presentadas
       console.log("PracticeLettersPage: Sesión de práctica finalizada. Todas las letras presentadas.");
@@ -80,8 +84,12 @@ export class PracticeLettersPage implements OnInit {
     }
   }
 
+  // Se mantiene getLetterImageUrl aunque ahora la URL se genera directamente en loadNextLetter
+  // Si tienes otras partes de la app que usan esta función, puedes mantenerla.
+  // Si no, podrías considerar eliminarla si la URL se genera solo en loadNextLetter.
   getLetterImageUrl(letter: string): string {
-    return `https://placehold.co/250x250/transparent/6495ED?text=${letter.toUpperCase()}`;
+    // Esta función ahora también genera la URL con fondo transparente y letra minúscula
+    return `https://placehold.co/250x250/transparent/FFFFFF?text=${letter}`;
   }
 
   markAnswer(isCorrect: boolean) {

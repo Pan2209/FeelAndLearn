@@ -1,3 +1,4 @@
+<!-- src/app/practice-letters/practice-letters.page.html -->
 <ion-header [translucent]="true">
   <ion-toolbar>
     <ion-buttons slot="start">
@@ -15,7 +16,9 @@
 
     <div *ngIf="!practiceEnded" class="current-practice-section">
       <p class="attempts-counter">Letra {{ currentPracticeIndex + 1 }} de {{ alphabet.length }}</p>
-      <img [src]="currentLetterImageUrl" [alt]="'Letra ' + currentLetter" class="letter-display-image">
+      <!-- CAMBIO: Aplicamos el filtro de color aleatorio aquí -->
+      <!-- La imagen ahora se genera con fondo transparente y la letra en minúscula -->
+      <img [src]="currentLetterImageUrl" [alt]="'Letra ' + currentLetter" class="letter-display-image" [style.filter]="'hue-rotate(' + randomHueRotate + ')'">
 
       <div class="feedback-buttons">
         <ion-button expand="block" size="large" color="success" (click)="markAnswer(true)">
@@ -36,7 +39,7 @@
           <p>Total de Letras Practicadas: {{ alphabet.length }}</p>
         </ion-card-content>
       </ion-card>
-      <!-- CAMBIO AQUÍ: Botón para ir a la página de progreso -->
+      <!-- Botón para ir a la página de progreso -->
       <ion-button expand="block" size="large" (click)="goToProgressPage()">
         Ver Progreso
       </ion-button>
