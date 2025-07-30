@@ -11,12 +11,10 @@ export class FirebaseService {
 
   async registerUser(email: string, password: string): Promise<User> {
     try {
-      console.log("FirebaseService: Intentando crear usuario (sin enviar verificación todavía):", email);
+      console.log("FirebaseService: Intentando crear usuario:", email);
       const userCredential = await createUserWithEmailAndPassword(this.auth, email, password);
       const user = userCredential.user;
       console.log("FirebaseService: Usuario creado exitosamente:", user.uid);
-      // CRÍTICO: Eliminado el envío automático de correo de verificación aquí.
-      // Ahora se enviará desde la página verify-email.
       return user;
     } catch (e: any) {
       console.error("FirebaseService: Error al crear usuario:", e.code, e.message);
@@ -95,18 +93,24 @@ export class FirebaseService {
 
   async saveUserLetterProgress(userId: string, letter: string, correctCount: number, totalCount: number): Promise<void> {
     if (!userId) {
-      console.error("FirebaseService: userId es nulo o indefinido al guardar el progreso.");
+      console.error("FirebaseService: saveUserLetterProgress - userId es nulo o indefinido.");
       return;
     }
     const userProgressDocRef = doc(this.firestore, `users/${userId}/progress/overall`);
-    console.log(`FirebaseService: Intentando guardar progreso para userId: ${userId}, letra: ${letter}`);
+    console.log(`FirebaseService: saveUserLetterProgress - Intentando guardar para userId: ${userId}, letra: ${letter}, correctCount (sesión): ${correctCount}, totalCount (sesión): ${totalCount}`);
 
     try {
-      const docSnap = await getDoc(userProgressDocRef);
-      let currentProgress = docSnap.exists() ? docSnap.data() : {};
-      console.log("FirebaseService: Progreso actual antes de actualizar:", currentProgress);
+      const docSnap = await getDoc(userProgressDocRef); 
+      let currentProgress: { [key: string]: { correct: number, total: number } } = {}; 
+      if (docSnap.exists()) {
+        currentProgress = docSnap.data() as { [key: string]: { correct: number, total: number } };
+        console.log("FirebaseService: saveUserLetterProgress - Progreso actual leido de DB:", currentProgress);
+      } else {
+        console.log("FirebaseService: saveUserLetterProgress - No existe documento de progreso, se creará uno nuevo.");
+      }
 
       const letterData = currentProgress[letter] || { correct: 0, total: 0 };
+      console.log(`FirebaseService: saveUserLetterProgress - Datos de la letra '${letter}' ANTES de actualizar:`, letterData);
 
       letterData.correct += correctCount;
       letterData.total += totalCount;
@@ -116,33 +120,35 @@ export class FirebaseService {
         [letter]: letterData
       };
 
+      console.log("FirebaseService: saveUserLetterProgress - Progreso FINAL a escribir en DB:", currentProgress);
       await setDoc(userProgressDocRef, currentProgress);
-      console.log(`FirebaseService: Progreso de la letra '${letter}' guardado exitosamente para el usuario ${userId}`);
+      console.log(`FirebaseService: saveUserLetterProgress - Progreso de la letra '${letter}' guardado exitosamente.`);
     } catch (e: any) {
-      console.error(`FirebaseService: Error al guardar el progreso de la letra '${letter}':`, e);
+      console.error(`FirebaseService: saveUserLetterProgress - Error al guardar el progreso de la letra '${letter}':`, e);
       throw e;
     }
   }
 
   async getUserProgress(userId: string): Promise<{ [key: string]: { correct: number, total: number } }> {
     if (!userId) {
-      console.error("FirebaseService: userId es nulo o indefinido al obtener el progreso.");
+      console.error("FirebaseService: getUserProgress - userId es nulo o indefinido.");
       return {};
     }
     const userProgressDocRef = doc(this.firestore, `users/${userId}/progress/overall`);
-    console.log(`FirebaseService: Intentando obtener progreso para userId: ${userId}`);
+    console.log(`FirebaseService: getUserProgress - Intentando obtener progreso para userId: ${userId}`);
 
     try {
       const docSnap = await getDoc(userProgressDocRef);
       if (docSnap.exists()) {
-        console.log("FirebaseService: Progreso obtenido:", docSnap.data());
-        return docSnap.data() as { [key: string]: { correct: number, total: number } };
+        const data = docSnap.data() as { [key: string]: { correct: number, total: number } };
+        console.log("FirebaseService: getUserProgress - Progreso obtenido de DB:", data);
+        return data;
       } else {
-        console.log("FirebaseService: No se encontró progreso para el usuario:", userId);
+        console.log("FirebaseService: getUserProgress - No se encontró progreso para el usuario:", userId);
         return {};
       }
     } catch (e: any) {
-      console.error("FirebaseService: Error al obtener el progreso del usuario:", e);
+      console.error("FirebaseService: getUserProgress - Error al obtener el progreso del usuario:", e);
       throw e;
     }
   }

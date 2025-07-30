@@ -61,6 +61,7 @@ export class PracticeLettersPage implements OnInit {
     this.currentPracticeIndex = 0;
     this.practiceEnded = false;
     this.shuffledAlphabet = this.shuffleArray([...this.alphabet]);
+    console.log("PracticeLettersPage: Nueva sesión iniciada. Abecedario mezclado:", this.shuffledAlphabet);
     this.loadNextLetter();
   }
 
@@ -69,9 +70,10 @@ export class PracticeLettersPage implements OnInit {
       this.currentLetter = this.shuffledAlphabet[this.currentPracticeIndex];
       this.currentLetterImageUrl = this.getLetterImageUrl(this.currentLetter);
       this.sendLetterToBrailleDevice(this.currentLetter);
+      console.log(`PracticeLettersPage: Cargando letra ${this.currentPracticeIndex + 1}/${this.shuffledAlphabet.length}: '${this.currentLetter}'`);
     } else {
       this.practiceEnded = true;
-      console.log("PracticeLettersPage: Sesión de práctica finalizada. Guardando resultados.");
+      console.log("PracticeLettersPage: Sesión de práctica finalizada. Todas las letras presentadas.");
       this.savePracticeResults();
     }
   }
@@ -84,16 +86,19 @@ export class PracticeLettersPage implements OnInit {
     if (!this.sessionResults[this.currentLetter]) {
       this.sessionResults[this.currentLetter] = { correct: 0, total: 0 };
     }
-    this.sessionResults[this.currentLetter].total++;
+    // Para esta sesión, cada letra se presenta una vez, así que el total de la sesión es 1
+    this.sessionResults[this.currentLetter].total = 1; 
 
     if (isCorrect) {
-      this.sessionResults[this.currentLetter].correct++;
+      this.sessionResults[this.currentLetter].correct = 1; // 1 acierto para esta letra en esta sesión
       this.correctAnswers++;
       this.presentToast('¡Correcto!');
     } else {
+      this.sessionResults[this.currentLetter].correct = 0; // 0 aciertos para esta letra en esta sesión
       this.incorrectAnswers++;
       this.presentToast('Incorrecto.');
     }
+    console.log(`PracticeLettersPage: Respuesta marcada para '${this.currentLetter}'. Correcta: ${isCorrect}. sessionResults para esta letra:`, this.sessionResults[this.currentLetter]);
     this.currentPracticeIndex++;
     this.loadNextLetter();
   }
@@ -105,15 +110,24 @@ export class PracticeLettersPage implements OnInit {
   private async savePracticeResults() {
     const currentUser = this.firebaseService.getCurrentUser();
     if (currentUser && currentUser.uid) {
-      console.log(`PracticeLettersPage: Usuario autenticado: ${currentUser.uid}. Procediendo a guardar resultados.`);
-      for (const letter of Object.keys(this.sessionResults)) {
-        const { correct, total } = this.sessionResults[letter];
-        console.log(`PracticeLettersPage: Guardando para letra '${letter}': Correctas: ${correct}, Total: ${total}`);
-        await this.firebaseService.saveUserLetterProgress(currentUser.uid, letter, correct, total);
+      console.log(`PracticeLettersPage: savePracticeResults - Usuario autenticado: ${currentUser.uid}.`);
+      console.log("PracticeLettersPage: savePracticeResults - sessionResults ANTES de procesar para guardar:", JSON.parse(JSON.stringify(this.sessionResults))); // Copia profunda para log
+      
+      // CRÍTICO: Iterar sobre el alfabeto COMPLETO para asegurar que todas las letras se actualicen
+      for (const letter of this.alphabet) { 
+        // Obtener los resultados de esta letra para la sesión actual.
+        // Si la letra no fue interactuada (lo cual no debería pasar si se completan las 26),
+        // se asumirá 0 correctas y 1 total para esta sesión.
+        const correctForThisSession = this.sessionResults[letter]?.correct || 0;
+        const totalForThisSession = 1; // Cada letra siempre se "intenta" una vez por sesión completa
+
+        console.log(`PracticeLettersPage: savePracticeResults - Procesando letra '${letter}': Aciertos (sesión): ${correctForThisSession}, Intentos (sesión): ${totalForThisSession}`);
+        await this.firebaseService.saveUserLetterProgress(currentUser.uid, letter, correctForThisSession, totalForThisSession);
       }
       this.presentToast('Resultados de la práctica guardados.');
+      console.log("PracticeLettersPage: savePracticeResults - Todos los resultados de la práctica han sido enviados a Firebase.");
     } else {
-      console.warn('PracticeLettersPage: No hay usuario autenticado para guardar el progreso. Asegúrate de iniciar sesión.');
+      console.warn('PracticeLettersPage: savePracticeResults - No hay usuario autenticado para guardar el progreso. Asegúrate de iniciar sesión.');
       this.presentToast('No se pudo guardar el progreso (usuario no autenticado).');
     }
   }
@@ -126,7 +140,7 @@ export class PracticeLettersPage implements OnInit {
     this.router.navigateByUrl('/progress');
   }
 
-  async presentToast(message: string) {
+  async presentToast(message: string, color: string = 'primary') {
     const toast = await this.toastController.create({
       message: message,
       duration: 1500,
