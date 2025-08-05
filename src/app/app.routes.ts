@@ -43,6 +43,7 @@ export const routes: Routes = [
     loadComponent: () => import('./auth/verify-email/verify-email.page').then( m => m.VerifyEmailPage)
   },
   {
+
     path: 'learn-alphabet',
     loadComponent: () => import('./learn-alphabet/learn-alphabet.page').then(m => m.LearnAlphabetPage)
   },
@@ -51,3 +52,5 @@ export const routes: Routes = [
     loadComponent: () => import('./practice-letters/practice-letters.page').then( m => m.PracticeLettersPage)
   },
 ];
+
+

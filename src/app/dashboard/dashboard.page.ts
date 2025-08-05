@@ -17,11 +17,13 @@ import { FirebaseService } from '../services/firebase.service';
 })
 export class DashboardPage implements OnInit {
 
+  private readonly ESP32_URL = 'http://10.10.4.73';
+
   constructor(private firebaseService: FirebaseService, private router: Router) {
     addIcons({ logOutOutline });
   }
 
-  ngOnInit() { }
+  ngOnInit() {}
 
   async logout() {
     try {
@@ -41,6 +43,7 @@ export class DashboardPage implements OnInit {
     this.router.navigateByUrl('/progress');
   }
 
+
   goToLearnAlphabet() {
     this.router.navigateByUrl('/learn-alphabet');
   }
@@ -50,3 +53,4 @@ export class DashboardPage implements OnInit {
     this.router.navigateByUrl('/practice-letters');
   }
 }
+

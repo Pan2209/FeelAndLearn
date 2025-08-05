@@ -1,0 +1,13 @@
+<ion-header>
+  <ion-toolbar>
+    <ion-title>Practicar Letras con Dispositivo</ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content class="ion-padding">
+  <div class="grid-letras">
+    <ion-button *ngFor="let letra of letras" class="letra-boton" (click)="enviarLetra(letra)">
+      {{ letra }}
+    </ion-button>
+  </div>
+</ion-content>
