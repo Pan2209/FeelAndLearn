@@ -3,6 +3,7 @@ import { CommonModule } from '@angular/common';
 import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
+import { HttpClientModule, HttpClient } from '@angular/common/http';
 import { addIcons } from 'ionicons';
 import { arrowBackOutline } from 'ionicons/icons';
 
@@ -11,7 +12,7 @@ import { arrowBackOutline } from 'ionicons/icons';
   templateUrl: './learn-alphabet.page.html',
   styleUrls: ['./learn-alphabet.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, HttpClientModule]
 })
 export class LearnAlphabetPage implements OnInit {
   alphabet: string[] = [
@@ -20,9 +21,12 @@ export class LearnAlphabetPage implements OnInit {
   ];
   alphabetGrid: string[][] = [];
 
+  esp32IP: string = 'http://192.168.0.107'; // <-- Cambia esta IP según tu red
+
   constructor(
     private router: Router,
-    private toastController: ToastController
+    private toastController: ToastController,
+    private http: HttpClient
   ) {
     addIcons({ arrowBackOutline });
   }
@@ -39,13 +43,20 @@ export class LearnAlphabetPage implements OnInit {
   }
 
   selectLetter(letter: string) {
-    this.sendLetterToBrailleDevice(letter);
+    this.sendLetterToESP32(letter);
   }
 
-  private sendLetterToBrailleDevice(letter: string) {
-    console.log(`Enviando letra '${letter}' al dispositivo Braille.`);
-    // CORRECCIÓN AQUÍ: Mostrar la letra en minúscula en el Toast
-    this.presentToast(`Mostrando letra: ${letter}`);
+  private sendLetterToESP32(letter: string) {
+    const endpoint = `${this.esp32IP}/letter${letter.toUpperCase()}`; // Ej: /letterA
+
+    this.http.get(endpoint).subscribe({
+      next: () => {
+        this.presentToast(`Letra enviada: ${letter}`);
+      },
+      error: () => {
+        this.presentToast(`Error al enviar la letra: ${letter}`);
+      }
+    });
   }
 
   goBack() {
@@ -60,4 +71,11 @@ export class LearnAlphabetPage implements OnInit {
     });
     toast.present();
   }
+  resetBraille() {
+  this.http.get(`${this.esp32IP}/reset`).subscribe({
+    next: () => this.presentToast('Braille reseteado'),
+    error: () => this.presentToast('Error al resetear Braille')
+  });
+}
+
 }

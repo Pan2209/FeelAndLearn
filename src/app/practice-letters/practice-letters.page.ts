@@ -4,6 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
+import { HttpClient } from '@angular/common/http';
 import { arrowBackOutline } from 'ionicons/icons';
 import { FirebaseService } from '../services/firebase.service';
 
