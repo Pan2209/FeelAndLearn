@@ -21,7 +21,7 @@ export class LearnAlphabetPage implements OnInit {
   ];
   alphabetGrid: string[][] = [];
 
-  esp32IP: string = 'http://192.168.0.107'; // <-- Cambia esta IP según tu red
+  esp32IP: string = 'http://192.168.0.101'; // <-- Cambia esta IP según tu red
 
   constructor(
     private router: Router,
