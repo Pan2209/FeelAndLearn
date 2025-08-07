@@ -4,7 +4,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule, ToastController } from '@ionic/angular';
 import { Router } from '@angular/router';
 import { addIcons } from 'ionicons';
-import { HttpClient } from '@angular/common/http';
+import { HttpClient, HttpClientModule } from '@angular/common/http'; // <-- AÑADIDO
 import { arrowBackOutline } from 'ionicons/icons';
 import { FirebaseService } from '../services/firebase.service';
 
@@ -13,7 +13,7 @@ import { FirebaseService } from '../services/firebase.service';
   templateUrl: './practice-letters.page.html',
   styleUrls: ['./practice-letters.page.scss'],
   standalone: true,
-  imports: [IonicModule, CommonModule, FormsModule]
+  imports: [IonicModule, CommonModule, FormsModule, HttpClientModule] // <-- AÑADIDO
 })
 export class PracticeLettersPage implements OnInit {
 
@@ -23,22 +23,22 @@ export class PracticeLettersPage implements OnInit {
   ];
   shuffledAlphabet: string[] = [];
   currentPracticeIndex: number = 0;
-
   currentLetter: string = '';
   currentLetterImageUrl: string = '';
-  // Propiedad para el valor de rotación de tono aleatorio (hue-rotate)
   randomHueRotate: string = '0deg'; 
-
   correctAnswers: number = 0;
   incorrectAnswers: number = 0;
   practiceEnded: boolean = false;
 
   private sessionResults: { [key: string]: { correct: number, total: number } } = {};
 
+  esp32IP: string = 'http://192.168.0.100'; // <-- IP del ESP32
+
   constructor(
     private router: Router,
     private toastController: ToastController,
-    private firebaseService: FirebaseService
+    private firebaseService: FirebaseService,
+    private http: HttpClient // <-- AÑADIDO
   ) {
     addIcons({ arrowBackOutline });
   }
@@ -58,45 +58,28 @@ export class PracticeLettersPage implements OnInit {
   }
 
   startNewPracticeSession() {
-    this.sessionResults = {}; // Reiniciar resultados de la sesión
+    this.sessionResults = {};
     this.correctAnswers = 0;
     this.incorrectAnswers = 0;
     this.currentPracticeIndex = 0;
     this.practiceEnded = false;
     this.shuffledAlphabet = this.shuffleArray([...this.alphabet]);
-    console.log("PracticeLettersPage: Nueva sesión iniciada. Abecedario mezclado:", this.shuffledAlphabet);
     this.loadNextLetter();
   }
 
   loadNextLetter() {
     if (this.currentPracticeIndex < this.shuffledAlphabet.length) {
       this.currentLetter = this.shuffledAlphabet[this.currentPracticeIndex];
-      // CAMBIO CRÍTICO: Fondo transparente y letra en minúscula
-      // El color del texto (FFFFFF) será el que rote con hue-rotate
       this.currentLetterImageUrl = `https://placehold.co/250x250/transparent/FFFFFF?text=${this.currentLetter}`; 
-      // Generar un valor de rotación de tono aleatorio (0 a 359 grados)
       this.randomHueRotate = `${Math.floor(Math.random() * 360)}deg`;
-      this.sendLetterToBrailleDevice(this.currentLetter);
-      console.log(`PracticeLettersPage: Cargando letra ${this.currentPracticeIndex + 1}/${this.shuffledAlphabet.length}: '${this.currentLetter}' con filtro hue-rotate: ${this.randomHueRotate}`);
+      this.sendLetterToBrailleDevice(this.currentLetter); // <-- ENVÍA AL ESP32
     } else {
-      this.practiceEnded = true; // Todas las letras han sido presentadas
-      console.log("PracticeLettersPage: Sesión de práctica finalizada. Todas las letras presentadas.");
-      this.savePracticeResults(); // Guardar resultados al finalizar
+      this.practiceEnded = true;
+      this.savePracticeResults();
     }
   }
 
-  // Se mantiene getLetterImageUrl aunque ahora la URL se genera directamente en loadNextLetter
-  // Si tienes otras partes de la app que usan esta función, puedes mantenerla.
-  // Si no, podrías considerar eliminarla si la URL se genera solo en loadNextLetter.
-  getLetterImageUrl(letter: string): string {
-    // Esta función ahora también genera la URL con fondo transparente y letra minúscula
-    return `https://placehold.co/250x250/transparent/FFFFFF?text=${letter}`;
-  }
-
   markAnswer(isCorrect: boolean) {
-    // CRÍTICO: Asegurarse de que cada letra presentada tenga un registro de 1 intento en la sesión.
-    // Si la letra ya está en sessionResults (por alguna razón rara), la actualizamos.
-    // Si no está, la inicializamos con 1 intento para esta sesión.
     this.sessionResults[this.currentLetter] = { 
       correct: isCorrect ? 1 : 0, 
       total: 1 
@@ -109,35 +92,33 @@ export class PracticeLettersPage implements OnInit {
       this.incorrectAnswers++;
       this.presentToast('Incorrecto.');
     }
-    console.log(`PracticeLettersPage: Respuesta marcada para '${this.currentLetter}'. Correcta: ${isCorrect}. sessionResults para esta letra:`, this.sessionResults[this.currentLetter]);
+
     this.currentPracticeIndex++;
     this.loadNextLetter();
   }
 
   private sendLetterToBrailleDevice(letter: string) {
-    console.log(`PracticeLettersPage: Enviando letra '${letter}' al dispositivo Braille para práctica.`);
+    const endpoint = `${this.esp32IP}/letter${letter.toUpperCase()}`;
+    this.http.get(endpoint).subscribe({
+      next: () => {
+        console.log(`Letra '${letter}' enviada al ESP32`);
+      },
+      error: () => {
+        this.presentToast(`Error al enviar letra '${letter}' al dispositivo`);
+      }
+    });
   }
 
   private async savePracticeResults() {
     const currentUser = this.firebaseService.getCurrentUser();
     if (currentUser && currentUser.uid) {
-      console.log(`PracticeLettersPage: savePracticeResults - Usuario autenticado: ${currentUser.uid}.`);
-      console.log("PracticeLettersPage: savePracticeResults - sessionResults ANTES de procesar para guardar:", JSON.parse(JSON.stringify(this.sessionResults)));
-      
       try {
-        // Obtener el progreso actual del usuario UNA SOLA VEZ
         let currentOverallProgress = await this.firebaseService.getUserProgress(currentUser.uid);
-        console.log("PracticeLettersPage: savePracticeResults - Progreso general actual obtenido de Firebase:", currentOverallProgress);
 
-        // Iterar sobre el alfabeto COMPLETO para actualizar el progreso
         for (const letter of this.alphabet) { 
-          // Obtener los resultados de esta letra para la sesión actual.
-          // Si la letra NO fue interactuada en esta sesión (lo cual no debería pasar en una sesión completa),
-          // se asume 0 correctas y 1 total para esta sesión.
           const correctForThisSession = this.sessionResults[letter]?.correct || 0;
-          const totalForThisSession = this.sessionResults[letter]?.total || 1; // Aseguramos que si no se interactuó, el total sea 1 para esta sesión.
+          const totalForThisSession = this.sessionResults[letter]?.total || 1;
 
-          // Actualizar los datos de la letra en el objeto de progreso general
           const existingLetterData = currentOverallProgress[letter] || { correct: 0, total: 0 };
           existingLetterData.correct += correctForThisSession;
           existingLetterData.total += totalForThisSession;
@@ -145,21 +126,16 @@ export class PracticeLettersPage implements OnInit {
             ...currentOverallProgress,
             [letter]: existingLetterData
           };
-          console.log(`PracticeLettersPage: savePracticeResults - Actualizando en memoria letra '${letter}': Aciertos (sesión): ${correctForThisSession}, Intentos (sesión): ${totalForThisSession}. Nuevo acumulado: ${existingLetterData.correct}/${existingLetterData.total}`);
         }
 
-        // Guardar el objeto de progreso general actualizado UNA SOLA VEZ en Firebase
         await this.firebaseService.setOverallUserProgress(currentUser.uid, currentOverallProgress);
         this.presentToast('Resultados de la práctica guardados.');
-        console.log("PracticeLettersPage: savePracticeResults - Todos los resultados de la práctica han sido enviados a Firebase en una sola operación.");
-
       } catch (error) {
-        console.error('PracticeLettersPage: savePracticeResults - Error al guardar el progreso de la práctica:', error);
-        this.presentToast('Error al guardar el progreso de la práctica.');
+        console.error('Error al guardar el progreso:', error);
+        this.presentToast('Error al guardar el progreso.');
       }
 
     } else {
-      console.warn('PracticeLettersPage: savePracticeResults - No hay usuario autenticado para guardar el progreso. Asegúrate de iniciar sesión.');
       this.presentToast('No se pudo guardar el progreso (usuario no autenticado).');
     }
   }
@@ -176,7 +152,8 @@ export class PracticeLettersPage implements OnInit {
     const toast = await this.toastController.create({
       message: message,
       duration: 1500,
-      position: 'bottom'
+      position: 'bottom',
+      color
     });
     toast.present();
   }

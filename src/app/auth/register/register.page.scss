@@ -1,31 +1,24 @@
-// Estilos de la página de registro
-ion-content {
-  --padding-top: 0px;
-  --padding-bottom: 0px;
-  --padding-start: 0px;
-  --padding-end: 0px;
-}
-
-ion-toolbar {
-  /* Estilos de la toolbar (ya en variables.scss) */
+.register-content {
+  --padding-top: 0;
+  --padding-bottom: 0;
+  --padding-start: 0;
+  --padding-end: 0;
 }
 
 .content-wrapper {
   display: flex;
   flex-direction: column;
-  justify-content: flex-start;
   align-items: center;
-  height: 100%;
-  padding: 20px;
-  text-align: center;
-  overflow-y: auto; /* Permite scroll si el contenido es largo */
+  justify-content: flex-start;
+  min-height: 100%; // ⬅️ evita colapsos en Android
+  width: 100%;
 }
 
 .top-image-container {
   width: 100%;
   max-width: 150px;
-  margin-top: 30px; /* Aumentado para más espacio superior */
-  margin-bottom: 15px; /* Espacio debajo de la imagen */
+  margin-top: 30px;
+  margin-bottom: 15px;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -35,54 +28,40 @@ ion-toolbar {
   width: 100%;
   height: auto;
   object-fit: contain;
+  background-color: black;
 }
 
 h2 {
   font-size: 24px;
   font-weight: bold;
-  color: var(--app-color-text-dark);
-  margin: 0px !important;
-  padding: 0px !important;
-  line-height: 1 !important;
+  margin: 10px 0;
+  color: var(--ion-color-dark);
+  text-align: center;
 }
 
 .user-icon-container {
   display: flex;
-  flex-direction: column;
   justify-content: center;
   align-items: center;
-  margin: 0px !important;
-  padding: 0px !important;
-  height: auto;
-  min-height: 0px !important;
+  margin: 10px 0;
+
   .user-icon {
-    font-size: 70px !important;
+    font-size: 70px;
     color: var(--ion-color-primary);
-    display: block;
-    line-height: 1 !important;
-    margin: 0 !important;
-    padding: 0 !important;
-    height: auto;
-    width: auto;
   }
 }
 
 ion-text.hidden-message {
-  display: none !important;
-  margin: 0 !important;
-  padding: 0 !important;
-  height: 0 !important;
-  min-height: 0 !important;
+  display: none;
 }
 
 ion-text:not(.hidden-message) {
   display: block;
-  height: auto;
-  margin: 0px !important;
-  padding: 0px !important;
+  text-align: center;
+
   p {
-    margin: 0px !important;
-    padding: 0px !important;
+    margin: 0;
+    font-size: 14px;
     line-height: 1.2;
   }
 }
@@ -90,55 +69,31 @@ ion-text:not(.hidden-message) {
 .form-container {
   width: 100%;
   max-width: 350px;
-  margin-top: 20px; /* Ajustado para mejor espaciado después del ícono/título */
-  padding-top: 0px !important;
+  margin-top: 20px;
 }
 
 ion-item.custom-input-item {
-  position: relative;
-  /* Propiedades de padding, border, background, height ya definidas en variables.scss */
   margin-bottom: 20px;
-  border-top: none !important; /* Mantiene tu estilo original */
-}
-
-/* ESTE BLOQUE HA SIDO ELIMINADO PORQUE CAUSABA CONFLICTO CON variables.scss */
-/*
-ion-item.custom-input-item ion-label {
-  z-index: 1;
-}
-
-ion-item.custom-input-item.ion-dirty ion-label,
-ion-item.custom-input-item.ion-focused ion-label {
-  font-size: 12px;
-  transform: translateY(-200%);
-  color: var(--app-color-text-dark) !important;
-  left: 15px;
-}
-*/
-
-ion-item.custom-input-item ion-input {
-  /* Propiedades ya definidas en variables.scss */
-  z-index: 2;
 }
 
 .privacy-checkbox {
-  --background: transparent;
   margin-top: 10px;
   margin-bottom: 20px;
   --padding-start: 0;
-  --inner-padding-end: 0;
+
   ion-checkbox {
     --background-checked: var(--ion-color-primary);
-    --border-color: var(--ion-color-secondary);
+    --border-color: var(--ion-color-medium);
     --border-radius: 4px;
   }
+
   ion-label {
     font-size: 14px;
-    color: var(--app-color-text-dark);
     margin-left: 8px;
-    text-align: left;
+    color: var(--ion-color-dark);
     white-space: normal;
   }
+
   .privacy-link {
     color: var(--ion-color-primary);
     text-decoration: none;
@@ -148,39 +103,7 @@ ion-item.custom-input-item ion-input {
   }
 }
 
-.action-button {
+.main-button {
   width: 100%;
-  margin-top: 30px;
-}
-
-.login-text {
-  text-align: center;
-  margin-top: 30px;
-  font-size: 14px;
-  color: var(--app-color-text-dark);
-}
-
-/* --- ESTILOS PARA EL MODAL DE PRIVACIDAD EN register.page.scss (AHORA SÍ AQUÍ) --- */
-ion-modal.privacy-modal-class {
-  --width: 90%;
-  --max-width: 360px;
-  --height: 90%;
-  --max-height: 650px;
-
-  --border-radius: 10px;
-  --box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
-
-  .ion-page {
-    height: 100%;
-    display: flex;
-    flex-direction: column;
-    background: var(--app-color-white);
-    border-radius: inherit;
-    overflow: hidden;
-  }
-
-  @media (min-width: 768px) {
-    --max-width: 500px;
-    --max-height: 700px;
-  }
+  margin-top: 20px;
 }

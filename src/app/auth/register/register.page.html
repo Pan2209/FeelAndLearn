@@ -7,7 +7,7 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content [fullscreen]="true">
+<ion-content class="ion-padding register-content" scroll-y="true">
   <div class="content-wrapper">
     <div class="top-image-container">
       <img src="assets/ionic-logo.png" alt="Registro Imagen" class="register-top-image">
@@ -27,22 +27,22 @@
       <ion-item class="custom-input-item">
         <ion-label position="floating">Usuario</ion-label>
         <ion-input type="text" [(ngModel)]="username"></ion-input>
-        </ion-item>
+      </ion-item>
 
       <ion-item class="custom-input-item">
         <ion-label position="floating">Correo Electrónico</ion-label>
         <ion-input type="email" [(ngModel)]="email"></ion-input>
-        </ion-item>
+      </ion-item>
 
       <ion-item class="custom-input-item">
         <ion-label position="floating">Contraseña</ion-label>
         <ion-input type="password" [(ngModel)]="password"></ion-input>
-        </ion-item>
+      </ion-item>
 
       <ion-item class="custom-input-item">
         <ion-label position="floating">Confirmar Contraseña</ion-label>
         <ion-input type="password" [(ngModel)]="confirmPassword"></ion-input>
-        </ion-item>
+      </ion-item>
 
       <ion-item lines="none" class="privacy-checkbox">
         <ion-checkbox slot="start" [(ngModel)]="privacyAccepted" [disabled]="!hasReadPrivacyPolicy"></ion-checkbox>
@@ -52,7 +52,7 @@
         <a (click)="openPrivacyModal()" class="privacy-link">Conocer más</a>
       </ion-item>
 
-      <ion-button expand="block" class="ion-margin-top main-button" (click)="register()" [disabled]="!privacyAccepted">REGISTRARSE</ion-button>
+      <ion-button expand="block" class="main-button" (click)="register()" [disabled]="!privacyAccepted">REGISTRARSE</ion-button>
     </div>
   </div>
 </ion-content>

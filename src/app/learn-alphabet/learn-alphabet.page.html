@@ -11,6 +11,7 @@
 
 <ion-content [fullscreen]="true">
   <div class="background-image"></div>
+
   <div class="alphabet-grid-container ion-padding">
     <ion-grid class="alphabet-grid">
       <ion-row *ngFor="let row of alphabetGrid" class="ion-justify-content-center">
@@ -24,8 +25,11 @@
       </ion-row>
     </ion-grid>
   </div>
+
+  <!-- Botón de reset colocado abajo dentro del contenido -->
+  <div class="ion-padding">
+    <ion-button expand="block" color="danger" (click)="resetBraille()">
+      Resetear Braille
+    </ion-button>
+  </div>
 </ion-content>
-<ion-button expand="block" color="danger" (click)="resetBraille()">
-  Resetear Braille
-</ion-button>
- 
